@@ -7161,8 +7161,9 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
       const panelSelect = document.getElementById('customPanelMantraSelect');
       if (panelSelect) panelSelect.value = mantraId.toString();
 
-      // 強制同步修持排版視野（預設全文誦持 full）
-      setPracticeLayout(AppState.practiceLayout || 'full');
+      // 強制同步修持排版視野（預設全文誦持 full）與一般誦讀模式 (read)
+      setPracticeLayout('full');
+      setPracticeMode('read');
 
       // 若校訂面板原為開啟狀態，自動暫存當前咒語的修改並無縫載入新咒語
       if (wasPanelOpen) {
