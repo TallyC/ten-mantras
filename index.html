@@ -746,26 +746,26 @@
     }
 
     /* ==========================================================================
-       咒語佈局三大樣式
+       咒語佈局三大樣式（精緻護眼、緊湊行距）
        ========================================================================== */
     .mantra-scroll-board {
       background: var(--bg-card);
       border: 1px solid var(--border-main);
-      border-radius: 16px;
-      padding: 2.5rem 2rem;
+      border-radius: 14px;
+      padding: 1.5rem 1.4rem;
       box-shadow: var(--shadow-sm);
-      min-height: 380px;
+      min-height: 320px;
       position: relative;
     }
     .mantra-sentence-block {
-      margin-bottom: 2rem;
-      padding: 1rem 1.25rem;
+      margin-bottom: 1.15rem;
+      padding: 0.65rem 0.95rem;
       border-radius: 10px;
       transition: background-color 0.3s ease, transform 0.2s ease;
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
-      gap: 0.75rem 0.4rem;
+      gap: 0.35rem 0.35rem;
       line-height: 1;
       cursor: pointer;
     }
@@ -778,15 +778,15 @@
       transform: translateX(4px);
     }
 
-        .word-spacer {
-      width: 1.5rem !important;
-      min-width: 1.5rem !important;
+    .word-spacer {
+      width: 1.25rem !important;
+      min-width: 1.25rem !important;
       margin: 0 !important;
       pointer-events: none;
     }
     .word-spacer .ruby-char {
       visibility: hidden;
-      width: 1.5rem;
+      width: 1.25rem;
     }
     .word-spacer .ruby-bopomofo,
     .word-spacer .ruby-pinyin {
@@ -800,15 +800,15 @@
       text-align: center;
       user-select: none;
       position: relative;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.15rem;
     }
     .ruby-bopomofo {
       font-size: var(--ruby-size);
       font-family: var(--font-serif);
       color: var(--accent-gold);
-      line-height: 1.15;
-      height: calc(var(--ruby-size) * 1.35);
-      margin-bottom: 0.2rem;
+      line-height: 1.1;
+      height: calc(var(--ruby-size) * 1.25);
+      margin-bottom: 0.08rem;
       transition: opacity 0.2s;
       font-weight: 500;
     }
@@ -817,18 +817,18 @@
       font-weight: 600;
       color: var(--text-main);
       letter-spacing: var(--char-spacing);
-      min-width: 1.2em;
+      min-width: 1.15em;
       transition: var(--transition);
       cursor: default;
-      line-height: 1.1;
+      line-height: 1.05;
     }
     .ruby-pinyin {
       font-size: var(--ruby-size);
       font-family: var(--font-sans);
       color: var(--text-muted);
-      line-height: 1.15;
-      height: calc(var(--ruby-size) * 1.35);
-      margin-top: 0.25rem;
+      line-height: 1.1;
+      height: calc(var(--ruby-size) * 1.25);
+      margin-top: 0.08rem;
       letter-spacing: 0.02em;
       transition: opacity 0.2s;
     }
@@ -1101,13 +1101,15 @@
       background: transparent;
       border: none;
       color: var(--text-sub);
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 600;
-      padding: 0.25rem 0.55rem;
-      border-radius: 6px;
+      padding: 0.2rem 0.42rem;
+      border-radius: 5px;
       cursor: pointer;
       transition: var(--transition);
       font-family: var(--font-sans);
+      white-space: nowrap;
+      line-height: 1.2;
     }
     .font-btn:hover {
       color: var(--text-main);
@@ -1118,11 +1120,21 @@
       box-shadow: var(--shadow-sm);
     }
 
-    /* 字級 CSS 變數動態配置 */
+    /* 字級 CSS 變數動態配置（含新增再縮小兩級：xsmall, small, standard, large, xlarge） */
     :root {
-      --char-size: 2.35rem;
-      --ruby-size: 0.88rem;
-      --char-spacing: 0.04em;
+      --char-size: 1.95rem;
+      --ruby-size: 0.78rem;
+      --char-spacing: 0.02em;
+    }
+    body[data-font-size="xsmall"] {
+      --char-size: 1.35rem;
+      --ruby-size: 0.60rem;
+      --char-spacing: 0.01em;
+    }
+    body[data-font-size="small"] {
+      --char-size: 1.65rem;
+      --ruby-size: 0.70rem;
+      --char-spacing: 0.015em;
     }
     body[data-font-size="standard"] {
       --char-size: 1.95rem;
@@ -1131,55 +1143,68 @@
     }
     body[data-font-size="large"] {
       --char-size: 2.45rem;
-      --ruby-size: 0.9rem;
-      --char-spacing: 0.05em;
+      --ruby-size: 0.90rem;
+      --char-spacing: 0.04em;
     }
     body[data-font-size="xlarge"] {
       --char-size: 3.0rem;
       --ruby-size: 1.05rem;
-      --char-spacing: 0.06em;
+      --char-spacing: 0.05em;
     }
 
-    /* 首頁經典甘露輪播樣式 */
+    /* 首頁經典甘露輪播樣式（精巧低調、版面零跳動） */
     .zen-quote-carousel {
       background: var(--bg-card);
       border: 1px solid var(--border-main);
-      border-radius: 14px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1.5rem;
+      border-radius: 12px;
+      padding: 0.75rem 1.2rem;
+      margin-bottom: 0.9rem;
       box-shadow: var(--shadow-sm);
       position: relative;
-      transition: var(--transition);
+      transition: all 0.25s ease;
+    }
+    .zen-quote-carousel.collapsed {
+      padding: 0.45rem 1rem;
+      margin-bottom: 0.6rem;
+    }
+    .zen-quote-carousel.collapsed .quote-carousel-body,
+    .zen-quote-carousel.collapsed .quote-dots-bar {
+      display: none !important;
+    }
+    .zen-quote-carousel.collapsed .quote-carousel-header {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
     }
     .quote-carousel-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.85rem;
-      padding-bottom: 0.5rem;
+      margin-bottom: 0.45rem;
+      padding-bottom: 0.35rem;
       border-bottom: 1px dashed var(--border-main);
     }
     .quote-carousel-badge {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: var(--accent-gold);
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      letter-spacing: 0.03em;
+      gap: 0.35rem;
+      letter-spacing: 0.02em;
     }
     .quote-carousel-controls {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
     .quote-nav-btn {
       background: var(--bg-card-subtle);
       border: 1px solid var(--border-main);
       color: var(--text-sub);
-      border-radius: 6px;
-      padding: 0.2rem 0.55rem;
-      font-size: 0.75rem;
+      border-radius: 5px;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.72rem;
       cursor: pointer;
       transition: var(--transition);
     }
@@ -1188,52 +1213,57 @@
       border-color: var(--accent-gold);
     }
     .quote-nav-indicator {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       font-family: var(--font-sans);
-      min-width: 38px;
+      min-width: 36px;
       text-align: center;
     }
     .quote-carousel-body {
-      min-height: 80px;
+      min-height: 52px;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
     .quote-carousel-text {
-      font-size: 1.15rem;
+      font-size: 0.96rem;
       font-family: var(--font-serif);
-      font-weight: 600;
+      font-weight: 500;
       color: var(--text-main);
-      line-height: 1.75;
-      letter-spacing: 0.04em;
-      margin-bottom: 0.75rem;
-      transition: opacity 0.3s ease;
+      line-height: 1.55;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.35rem;
+      min-height: 2.85em;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      transition: opacity 0.35s ease;
     }
     .quote-carousel-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.45rem;
     }
     .quote-carousel-source {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-sub);
       font-family: var(--font-serif);
     }
     .quote-carousel-actions {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
     }
     .btn-goto-mantra {
       background: var(--accent-gold-light);
       border: 1px solid var(--accent-gold);
       color: var(--accent-gold);
-      border-radius: 6px;
-      padding: 0.3rem 0.7rem;
-      font-size: 0.82rem;
+      border-radius: 5px;
+      padding: 0.18rem 0.6rem;
+      font-size: 0.76rem;
       cursor: pointer;
       transition: var(--transition);
       font-family: var(--font-serif);
@@ -1245,7 +1275,7 @@
     }
     .btn-cbeta-link {
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       text-decoration: none;
       transition: color 0.2s;
     }
@@ -1256,12 +1286,12 @@
     .quote-dots-bar {
       display: flex;
       justify-content: center;
-      gap: 5px;
-      margin-top: 0.85rem;
+      gap: 4px;
+      margin-top: 0.4rem;
     }
     .quote-dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--border-main);
       cursor: pointer;
@@ -1269,8 +1299,8 @@
     }
     .quote-dot.active {
       background: var(--accent-gold);
-      width: 18px;
-      border-radius: 4px;
+      width: 14px;
+      border-radius: 3px;
     }
 
     /* 雙欄經意釋義卡片化風格 */
@@ -1331,25 +1361,33 @@
 
     /* 行動裝置極致大字與護眼 RWD */
     @media (max-width: 768px) {
+      body[data-font-size="xsmall"] {
+        --char-size: 1.25rem;
+        --ruby-size: 0.58rem;
+      }
+      body[data-font-size="small"] {
+        --char-size: 1.50rem;
+        --ruby-size: 0.65rem;
+      }
       body[data-font-size="standard"] {
-        --char-size: 1.85rem;
-        --ruby-size: 0.76rem;
+        --char-size: 1.80rem;
+        --ruby-size: 0.74rem;
       }
       body[data-font-size="large"] {
-        --char-size: 2.25rem;
-        --ruby-size: 0.88rem;
+        --char-size: 2.20rem;
+        --ruby-size: 0.86rem;
       }
       body[data-font-size="xlarge"] {
-        --char-size: 2.75rem;
-        --ruby-size: 0.98rem;
+        --char-size: 2.65rem;
+        --ruby-size: 0.96rem;
       }
       .mantra-scroll-board {
-        padding: 1.25rem 0.75rem;
+        padding: 1rem 0.65rem;
       }
       .mantra-sentence-block {
-        gap: 0.9rem 0.45rem;
-        margin-bottom: 1.5rem;
-        padding: 0.75rem 0.5rem;
+        gap: 0.45rem 0.25rem;
+        margin-bottom: 0.95rem;
+        padding: 0.5rem 0.4rem;
       }
       .ruby-char {
         min-width: 1.15em;
@@ -1376,7 +1414,7 @@
         <div class="zen-emblem">十</div>
         <div class="brand-title">
           十小咒互動誦持
-          <span class="badge-v">v1.8</span>
+          <span class="badge-v">v1.9</span>
         </div>
       </div>
 
@@ -1396,11 +1434,13 @@
       </select>
 
       <div class="header-actions">
-        <!-- 字級縮放切換 (標準 / 大字 / 特大字) -->
-        <div class="font-size-switcher" title="調節經文字級大小">
-          <button class="font-btn" data-size="standard" title="標準字級">A-</button>
-          <button class="font-btn active" data-size="large" title="大字模式（推薦手機）">A</button>
-          <button class="font-btn" data-size="xlarge" title="特大字模式">A+</button>
+        <!-- 字級縮放切換（共 5 級：微小 / 小 / 標準 / 大 / 特大） -->
+        <div class="font-size-switcher" title="調節經文字級大小（共五級階梯）">
+          <button class="font-btn" data-size="xsmall" title="極小字級（A-- 緊湊微字）">A--</button>
+          <button class="font-btn" data-size="small" title="小字級（A- 精簡版面）">A-</button>
+          <button class="font-btn" data-size="standard" title="標準字級（A 平衡閱讀）">A</button>
+          <button class="font-btn active" data-size="large" title="大字模式（A+ 推薦手機）">A+</button>
+          <button class="font-btn" data-size="xlarge" title="特大字模式（A++ 沉浸大字）">A++</button>
         </div>
 
         <!-- 主題切換 (暖沙禪石 / 曜石古茶) -->
@@ -1433,6 +1473,7 @@
           <button class="quote-nav-btn" id="quotePrevBtn" title="上一句">◄</button>
           <span class="quote-nav-indicator" id="quoteIndicator">1 / 10</span>
           <button class="quote-nav-btn" id="quoteNextBtn" title="下一句">►</button>
+          <button class="quote-nav-btn" id="quoteToggleCollapseBtn" title="收合或展開甘露橫幅">收合 ▲</button>
         </div>
       </div>
       <div class="quote-carousel-body">
@@ -1883,7 +1924,7 @@
        自訂字音校訂系統 (Pronunciation Customizer)
        ========================================================================== */
     function loadCustomPronunciations() {
-      const currentVer = '1.8';
+      const currentVer = '1.9';
       const storedVer = SafeStorage.getItem('zen_custom_pronounce_ver');
       if (storedVer !== currentVer) {
         // 版本更新時，主動清除舊版結構錯位之本機快取，確保呈現法鼓山課誦本最新精校底本
@@ -2807,7 +2848,7 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
       if (resetAllBtn) resetAllBtn.addEventListener('click', resetAllCustomPronunciations);
       document.getElementById('copyCustomDataBtn').addEventListener('click', copyCustomDataForAI);
 
-      // 字級縮放切換器
+      // 字級縮放切換器（共 5 級階梯）
       function applyFontSize(size) {
         AppState.fontSize = size;
         document.body.setAttribute('data-font-size', size);
@@ -2821,7 +2862,14 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
         btn.addEventListener('click', (e) => {
           const size = e.currentTarget.getAttribute('data-size');
           applyFontSize(size);
-          const label = size === 'standard' ? '標準字級' : (size === 'large' ? '大字模式（手機推薦）' : '特大字模式');
+          const labelMap = {
+            'xsmall': '極小字級 A--（微字全覽）',
+            'small': '小字級 A-（精簡版面）',
+            'standard': '標準字級 A（平衡適中）',
+            'large': '大字模式 A+（推薦手機）',
+            'xlarge': '特大字模式 A++（沉浸大字）'
+          };
+          const label = labelMap[size] || size;
           showToast(`🔤 已切換至：${label}`);
         });
       });
@@ -2852,7 +2900,7 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
         showToast(`🔄 已將 ${revealedEls.length} 個翻開的字重新蓋上遮蔽`);
       });
 
-      // CBETA 經句輪播模組
+      // CBETA 經句輪播模組（精緻低調、慢速平穩、支援一鍵收合）
       function renderQuoteCarousel() {
         const q = CBETA_QUOTES[AppState.quoteIdx];
         if (!q) return;
@@ -2869,7 +2917,7 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
           setTimeout(() => {
             textEl.textContent = q.text;
             textEl.style.opacity = 1;
-          }, 150);
+          }, 200);
         }
         if (srcEl) srcEl.textContent = `——${q.source}`;
         if (indEl) indEl.textContent = `${AppState.quoteIdx + 1} / ${CBETA_QUOTES.length}`;
@@ -2909,7 +2957,10 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
 
       function startQuoteTimer() {
         if (AppState.quoteTimer) clearInterval(AppState.quoteTimer);
-        AppState.quoteTimer = setInterval(nextQuote, 6500);
+        // 若正在朗讀誦經中，暫停輪播，避免干擾專注
+        if (AppState.curView === 'practice' && AppState.isSpeaking) return;
+        // 輪播速度放慢至 16 秒（平緩柔和、無感切換）
+        AppState.quoteTimer = setInterval(nextQuote, 16000);
       }
 
       function resetQuoteTimer() {
@@ -2929,6 +2980,28 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
           nextQuote();
           resetQuoteTimer();
         });
+      }
+
+      // 甘露橫幅收合/展開切換
+      const quoteToggleCollapseBtn = document.getElementById('quoteToggleCollapseBtn');
+      if (quoteToggleCollapseBtn) {
+        quoteToggleCollapseBtn.addEventListener('click', () => {
+          const carouselBox = document.getElementById('cbetaQuoteCarousel');
+          if (!carouselBox) return;
+          const isCollapsed = carouselBox.classList.toggle('collapsed');
+          quoteToggleCollapseBtn.textContent = isCollapsed ? '展開 ▼' : '收合 ▲';
+          SafeStorage.setItem('zen_quote_collapsed', isCollapsed ? 'true' : 'false');
+          showToast(isCollapsed ? '已收合甘露橫幅，專注經文讀誦' : '已展開經典甘露');
+        });
+
+        // 讀取偏好
+        if (SafeStorage.getItem('zen_quote_collapsed') === 'true') {
+          const carouselBox = document.getElementById('cbetaQuoteCarousel');
+          if (carouselBox) {
+            carouselBox.classList.add('collapsed');
+            quoteToggleCollapseBtn.textContent = '展開 ▼';
+          }
+        }
       }
 
       const carouselBox = document.getElementById('cbetaQuoteCarousel');
