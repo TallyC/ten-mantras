@@ -1,0 +1,3029 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="stone">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>十小咒互動誦持與背誦核對工具 — CBETA 大藏經校勘版</title>
+  <meta name="description" content="依據 CBETA 中華電子佛典協會大藏經原典校勘，經意參考佛光大辭典與印順導師著作。支援注音與通用拼音三音對照、自訂讀音校正、漸進遮蔽與默誦智慧核對。">
+  
+  <!-- Google Fonts: 典雅襯線字體與楷體質感 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. 護眼禪意美學配色系統 (嚴禁高刺激性亮白背景與螢光色)
+       ========================================================================== */
+    :root {
+      /* 【暖沙禪石】日間護眼暖灰調 (Stone/Warm Sand) */
+      --bg-base: #f5f2eb;
+      --bg-card: #ffffff;
+      --bg-card-subtle: #eae6dc;
+      --bg-active: #e4dfd3;
+      --border-main: rgba(90, 78, 65, 0.16);
+      --border-focus: rgba(155, 120, 62, 0.5);
+      
+      --text-main: #2b2723;
+      --text-sub: #665f57;
+      --text-muted: #8f877d;
+      
+      --accent-gold: #9b783e;
+      --accent-gold-light: #f7ecd7;
+      --accent-green: #3d6854;
+      --accent-green-light: #e6f0eb;
+      --accent-red: #9e473b;
+      --accent-red-light: #fbeee8;
+      
+      --shadow-sm: 0 2px 8px rgba(70, 58, 45, 0.06);
+      --shadow-md: 0 8px 20px rgba(70, 58, 45, 0.09);
+      --font-serif: 'Noto Serif TC', 'BiauKai', 'DFKai-SB', 'Songti SC', serif;
+      --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      /* 【曜石古茶】夜修專注暗調 (Obsidian & Tea Ash) */
+      --bg-base: #121214;
+      --bg-card: #1b1b1f;
+      --bg-card-subtle: #242429;
+      --bg-active: #2f2f36;
+      --border-main: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(158, 179, 164, 0.4);
+      
+      --text-main: #e2e2e5;
+      --text-sub: #9e9ea6;
+      --text-muted: #6b6b73;
+      
+      --accent-gold: #c8a87b;
+      --accent-gold-light: rgba(200, 168, 123, 0.15);
+      --accent-green: #9eb3a4;
+      --accent-green-light: rgba(158, 179, 164, 0.15);
+      --accent-red: #d17567;
+      --accent-red-light: rgba(209, 117, 103, 0.15);
+      
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-serif);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      background-image: radial-gradient(circle at 50% 0%, rgba(155, 120, 62, 0.03) 0%, transparent 60%);
+    }
+
+    /* 頂部導覽列與版本標記 v1.2 */
+    .zen-header {
+      width: 100%;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-main);
+      padding: 0.75rem 1.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+    }
+
+    .zen-emblem {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid var(--accent-gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-gold);
+      font-size: 0.95rem;
+      font-family: var(--font-serif);
+      font-weight: 600;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge-v {
+      font-size: 0.68rem;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      background: var(--bg-card-subtle);
+      color: var(--accent-gold);
+      border: 1px solid var(--border-main);
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+    }
+
+    /* 頂部快速切換下拉選單 */
+    .header-mantra-select {
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+      border: 1px solid var(--border-main);
+      border-radius: 8px;
+      padding: 0.38rem 0.65rem;
+      font-size: 0.88rem;
+      font-family: var(--font-serif);
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: var(--transition);
+      max-width: 170px;
+    }
+    .header-mantra-select:hover,
+    .header-mantra-select:focus {
+      border-color: var(--accent-gold);
+      background: var(--bg-card);
+    }
+    .header-mantra-select option {
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-family: var(--font-serif);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-icon {
+      background: var(--bg-card-subtle);
+      color: var(--text-sub);
+      border: 1px solid var(--border-main);
+      border-radius: 8px;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.85rem;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+    }
+    .btn-icon:hover {
+      background: var(--bg-active);
+      color: var(--text-main);
+    }
+
+    .main-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 3rem;
+      flex: 1;
+    }
+
+    /* 正信經典法語引言 */
+    .zen-quote-banner {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .zen-quote-text {
+      font-size: 1.05rem;
+      color: var(--accent-gold);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+    .zen-quote-author {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* 修行與背誦統計儀表板 */
+    .zen-stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      background: var(--bg-card-subtle);
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      color: var(--text-sub);
+    }
+    .stat-item strong {
+      color: var(--text-main);
+      margin: 0 0.2rem;
+    }
+
+    /* 佈局選擇器列 (Switcher) */
+    .sub-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-main);
+    }
+    .nav-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .layout-toggle-group {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 8px;
+      padding: 2px;
+    }
+    .layout-tab {
+      background: transparent;
+      border: none;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      font-family: var(--font-serif);
+      color: var(--text-sub);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+    .layout-tab.active {
+      background: var(--bg-card-subtle);
+      color: var(--accent-gold);
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ==========================================================================
+       首頁三大佈局樣式
+       ========================================================================== */
+    .mantra-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.1rem;
+    }
+    .mantra-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .mantra-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-focus);
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    .card-num {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      background: var(--accent-gold-light);
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+    }
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.05em;
+    }
+    .card-theme {
+      font-size: 0.82rem;
+      color: var(--accent-green);
+      margin-bottom: 0.6rem;
+    }
+    .card-benefit {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border-main);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .progress-pill {
+      font-family: var(--font-sans);
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    .mantra-scroll-list {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .scroll-item {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .scroll-item:last-child {
+      border-bottom: none;
+    }
+    .scroll-item:hover {
+      background: var(--bg-card-subtle);
+    }
+    .scroll-left {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    .scroll-seq {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      min-width: 2.5rem;
+    }
+    .scroll-name {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .scroll-source {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-left: 0.75rem;
+    }
+    .scroll-action {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--accent-gold);
+    }
+
+    .mantra-focus-carousel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 16px;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      max-width: 680px;
+      margin: 1rem auto;
+      position: relative;
+    }
+    .focus-circle {
+      width: 76px;
+      height: 76px;
+      border: 2px solid var(--accent-gold);
+      border-radius: 50%;
+      margin: 0 auto 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: var(--accent-gold);
+      background: var(--accent-gold-light);
+    }
+    .focus-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+      letter-spacing: 0.08em;
+    }
+    .focus-theme {
+      font-size: 0.95rem;
+      color: var(--accent-green);
+      margin-bottom: 1rem;
+    }
+    .focus-benefit {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      max-width: 480px;
+      margin: 0 auto 1.75rem;
+      line-height: 1.7;
+    }
+    .focus-nav-arrows {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .btn-focus-action {
+      background: var(--accent-gold);
+      color: #ffffff;
+      border: none;
+      padding: 0.75rem 2rem;
+      font-size: 1.05rem;
+      font-family: var(--font-serif);
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(155, 120, 62, 0.3);
+      transition: var(--transition);
+    }
+    .btn-focus-action:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+
+    /* ==========================================================================
+       咒語修持頁面 (Practice View)
+       ========================================================================== */
+    .practice-view {
+      display: none;
+    }
+
+    .practice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-main);
+    }
+    .practice-title-group {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+    .btn-back {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      color: var(--text-sub);
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: var(--transition);
+    }
+    .btn-back:hover {
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+    }
+    .cur-mantra-name {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text-main);
+      letter-spacing: 0.05em;
+    }
+
+    .mode-tab-bar {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 1.25rem;
+    }
+    .mode-tab {
+      flex: 1;
+      text-align: center;
+      padding: 0.65rem 0.5rem;
+      font-size: 0.92rem;
+      font-family: var(--font-serif);
+      color: var(--text-sub);
+      background: transparent;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .mode-tab.active {
+      background: var(--bg-card-subtle);
+      color: var(--accent-gold);
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* 控制列：注音/拼音顯隱、校正字音自訂、手動持誦計次 */
+    .practice-controls-panel {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1.25rem;
+      font-size: 0.86rem;
+    }
+    .toggle-labels {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .toggle-item input {
+      accent-color: var(--accent-gold);
+      cursor: pointer;
+    }
+
+    .chant-counter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-sans);
+    }
+
+        /* 統整式修行控制列 */
+    .unified-practice-toolbar {
+      display: flex;
+      align-items: stretch;
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 12px;
+      padding: 0.6rem 0.75rem;
+      margin-bottom: 1.25rem;
+      gap: 0.85rem;
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+    }
+    .toolbar-group {
+      flex: 1 1 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .toolbar-group-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--accent-gold);
+      padding-left: 0.2rem;
+    }
+    .toolbar-btn-wrap {
+      display: flex;
+      gap: 0.35rem;
+      background: var(--bg-main);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--border-main);
+    }
+    .toolbar-divider {
+      width: 1px;
+      background: var(--border-main);
+      margin: 0.25rem 0;
+      display: block;
+    }
+    @media (max-width: 768px) {
+      .toolbar-divider {
+        display: none;
+      }
+    }
+    .practice-tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.45rem 0.2rem;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-sub);
+      text-align: center;
+      line-height: 1.25;
+    }
+    .practice-tab-btn .tab-main {
+      font-size: 0.88rem;
+      font-family: var(--font-serif);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .practice-tab-btn .tab-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+    .practice-tab-btn:hover {
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+    }
+    .practice-tab-btn.active {
+      background: var(--bg-card);
+      color: var(--accent-gold);
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border-focus);
+    }
+    .practice-tab-btn.active .tab-sub {
+      color: var(--accent-gold);
+      opacity: 0.85;
+    }
+
+    /* 讀音校正自訂面板 */
+    .custom-pronounce-panel {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-focus);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: 80px;
+    }
+    .custom-pronounce-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-main);
+    }
+    .custom-table-wrap {
+      max-height: 320px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .custom-table th, .custom-table td {
+      padding: 0.5rem 0.6rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-main);
+    }
+    .custom-table th {
+      background: var(--bg-card-subtle);
+      color: var(--text-sub);
+      font-weight: 600;
+    }
+    .custom-table input {
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+      border: 1px solid var(--border-main);
+      border-radius: 4px;
+      padding: 0.25rem 0.4rem;
+      font-size: 0.85rem;
+      text-align: center;
+      width: 90%;
+      font-family: var(--font-serif);
+    }
+
+    /* ==========================================================================
+       咒語佈局三大樣式
+       ========================================================================== */
+    .mantra-scroll-board {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      box-shadow: var(--shadow-sm);
+      min-height: 380px;
+      position: relative;
+    }
+    .mantra-sentence-block {
+      margin-bottom: 2rem;
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 0.75rem 0.4rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .mantra-sentence-block:hover {
+      background-color: var(--bg-card-subtle);
+    }
+    .mantra-sentence-block.speaking-active {
+      background-color: var(--accent-gold-light);
+      border-left: 3px solid var(--accent-gold);
+      transform: translateX(4px);
+    }
+
+        .word-spacer {
+      width: 1.5rem !important;
+      min-width: 1.5rem !important;
+      margin: 0 !important;
+      pointer-events: none;
+    }
+    .word-spacer .ruby-char {
+      visibility: hidden;
+      width: 1.5rem;
+    }
+    .word-spacer .ruby-bopomofo,
+    .word-spacer .ruby-pinyin {
+      visibility: hidden;
+    }
+    .word-unit {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: center;
+      user-select: none;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+    .ruby-bopomofo {
+      font-size: var(--ruby-size);
+      font-family: var(--font-serif);
+      color: var(--accent-gold);
+      line-height: 1.15;
+      height: calc(var(--ruby-size) * 1.35);
+      margin-bottom: 0.2rem;
+      transition: opacity 0.2s;
+      font-weight: 500;
+    }
+    .ruby-char {
+      font-size: var(--char-size);
+      font-weight: 600;
+      color: var(--text-main);
+      letter-spacing: var(--char-spacing);
+      min-width: 1.2em;
+      transition: var(--transition);
+      cursor: default;
+      line-height: 1.1;
+    }
+    .ruby-pinyin {
+      font-size: var(--ruby-size);
+      font-family: var(--font-sans);
+      color: var(--text-muted);
+      line-height: 1.15;
+      height: calc(var(--ruby-size) * 1.35);
+      margin-top: 0.25rem;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s;
+    }
+
+    /* 遮蔽模式 */
+    .word-unit.masked .ruby-char {
+      background: var(--bg-card-subtle);
+      color: transparent;
+      border-radius: 6px;
+      border: 1px dashed var(--border-focus);
+      cursor: pointer;
+    }
+    .word-unit.masked .ruby-bopomofo,
+    .word-unit.masked .ruby-pinyin {
+      opacity: 0;
+    }
+    .word-unit.masked.revealed .ruby-char {
+      background: var(--accent-gold-light);
+      color: var(--accent-gold);
+      border: 1px solid var(--accent-gold);
+    }
+    .word-unit.masked.revealed .ruby-bopomofo,
+    .word-unit.masked.revealed .ruby-pinyin {
+      opacity: 1;
+    }
+
+    /* 佈局 2：分句卡片 */
+    .sentence-card-stage {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 16px;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .step-indicator {
+      font-size: 0.85rem;
+      font-family: var(--font-sans);
+      color: var(--accent-gold);
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+    .stage-words-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem 0.6rem;
+      margin: 2rem 0;
+    }
+    .stage-nav-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    /* 佈局 3：義理雙欄 */
+    .split-grid-board {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 1.25rem;
+    }
+    .split-left-pane {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+    .split-right-pane {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: 16px;
+      padding: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+    .doc-section-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .doc-content {
+      color: var(--text-sub);
+      margin-bottom: 1.5rem;
+    }
+    .cbeta-link {
+      color: var(--accent-gold);
+      text-decoration: underline;
+      font-size: 0.85rem;
+      display: inline-block;
+      margin-top: 0.2rem;
+    }
+
+    /* 默誦核對工具面板 */
+    .verify-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .verify-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-family: var(--font-serif);
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+      border: 1px solid var(--border-main);
+      border-radius: 8px;
+      resize: vertical;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+    .verify-textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px var(--border-focus);
+    }
+    .verify-btn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .btn-action-primary {
+      background: var(--accent-gold);
+      color: #ffffff;
+      border: none;
+      padding: 0.55rem 1.4rem;
+      font-size: 0.92rem;
+      font-family: var(--font-serif);
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+    }
+    .btn-action-primary:hover {
+      opacity: 0.9;
+    }
+    .verify-result-box {
+      margin-top: 1.25rem;
+      padding: 1.25rem;
+      background: var(--bg-card-subtle);
+      border-radius: 8px;
+      display: none;
+    }
+    .diff-char {
+      padding: 0.15rem 0.35rem;
+      margin: 0 0.1rem;
+      border-radius: 4px;
+      display: inline-block;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .diff-correct {
+      background: var(--accent-green-light);
+      color: var(--accent-green);
+    }
+    .diff-wrong {
+      background: var(--accent-red-light);
+      color: var(--accent-red);
+      text-decoration: line-through;
+    }
+    .diff-missing {
+      background: var(--accent-gold-light);
+      color: var(--accent-gold);
+      border-bottom: 2px solid var(--accent-gold);
+    }
+
+    /* 浮層通知 (Toast) */
+    .zen-toast {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-focus);
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      box-shadow: var(--shadow-md);
+      font-size: 0.88rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 200;
+    }
+    .zen-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* 彈窗 (Modal) */
+    .zen-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      padding: 1rem;
+    }
+    .zen-modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 16px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-main);
+    }
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .modal-body {
+      color: var(--text-sub);
+      font-size: 0.92rem;
+      line-height: 1.8;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    .modal-actions {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-main);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    
+    /* ==========================================================================
+       字級縮放與手機端優質大字體系統
+       ========================================================================== */
+    .font-size-switcher {
+      display: flex;
+      align-items: center;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: 8px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .font-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-sub);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.25rem 0.55rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-sans);
+    }
+    .font-btn:hover {
+      color: var(--text-main);
+    }
+    .font-btn.active {
+      background: var(--accent-gold);
+      color: #1a1612;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* 字級 CSS 變數動態配置 */
+    :root {
+      --char-size: 2.35rem;
+      --ruby-size: 0.88rem;
+      --char-spacing: 0.04em;
+    }
+    body[data-font-size="standard"] {
+      --char-size: 1.95rem;
+      --ruby-size: 0.78rem;
+      --char-spacing: 0.02em;
+    }
+    body[data-font-size="large"] {
+      --char-size: 2.45rem;
+      --ruby-size: 0.9rem;
+      --char-spacing: 0.05em;
+    }
+    body[data-font-size="xlarge"] {
+      --char-size: 3.0rem;
+      --ruby-size: 1.05rem;
+      --char-spacing: 0.06em;
+    }
+
+    /* 首頁經典甘露輪播樣式 */
+    .zen-quote-carousel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      transition: var(--transition);
+    }
+    .quote-carousel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dashed var(--border-main);
+    }
+    .quote-carousel-badge {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      letter-spacing: 0.03em;
+    }
+    .quote-carousel-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .quote-nav-btn {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-main);
+      color: var(--text-sub);
+      border-radius: 6px;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .quote-nav-btn:hover {
+      color: var(--accent-gold);
+      border-color: var(--accent-gold);
+    }
+    .quote-nav-indicator {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      min-width: 38px;
+      text-align: center;
+    }
+    .quote-carousel-body {
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .quote-carousel-text {
+      font-size: 1.15rem;
+      font-family: var(--font-serif);
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.75;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+      transition: opacity 0.3s ease;
+    }
+    .quote-carousel-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .quote-carousel-source {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      font-family: var(--font-serif);
+    }
+    .quote-carousel-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .btn-goto-mantra {
+      background: var(--accent-gold-light);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      border-radius: 6px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-serif);
+      font-weight: 600;
+    }
+    .btn-goto-mantra:hover {
+      background: var(--accent-gold);
+      color: #1a1612;
+    }
+    .btn-cbeta-link {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .btn-cbeta-link:hover {
+      color: var(--accent-gold);
+      text-decoration: underline;
+    }
+    .quote-dots-bar {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 0.85rem;
+    }
+    .quote-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--border-main);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .quote-dot.active {
+      background: var(--accent-gold);
+      width: 18px;
+      border-radius: 4px;
+    }
+
+    /* 雙欄經意釋義卡片化風格 */
+    .meaning-summary {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--text-main);
+      margin-bottom: 1.25rem;
+      background: var(--bg-card-subtle);
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent-gold);
+    }
+    .meaning-subheading {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      margin: 1.25rem 0 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .meaning-breakdown-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .breakdown-item {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+    .breakdown-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      background: var(--accent-gold-light);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.35rem;
+    }
+    .breakdown-text {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text-main);
+    }
+    .origin-text {
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: var(--text-sub);
+      background: var(--bg-card-subtle);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border-main);
+    }
+
+    /* 行動裝置極致大字與護眼 RWD */
+    @media (max-width: 768px) {
+      body[data-font-size="standard"] {
+        --char-size: 1.85rem;
+        --ruby-size: 0.76rem;
+      }
+      body[data-font-size="large"] {
+        --char-size: 2.25rem;
+        --ruby-size: 0.88rem;
+      }
+      body[data-font-size="xlarge"] {
+        --char-size: 2.75rem;
+        --ruby-size: 0.98rem;
+      }
+      .mantra-scroll-board {
+        padding: 1.25rem 0.75rem;
+      }
+      .mantra-sentence-block {
+        gap: 0.9rem 0.45rem;
+        margin-bottom: 1.5rem;
+        padding: 0.75rem 0.5rem;
+      }
+      .ruby-char {
+        min-width: 1.15em;
+      }
+      .quote-carousel-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .split-grid-board {
+        grid-template-columns: 1fr;
+      }
+      .header-actions span.btn-text {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部導覽列 -->
+  <header class="zen-header">
+    <div class="header-inner">
+      <div class="brand-group" id="brandHomeBtn" title="返回十小咒首頁">
+        <div class="zen-emblem">十</div>
+        <div class="brand-title">
+          十小咒互動誦持
+          <span class="badge-v">v1.8</span>
+        </div>
+      </div>
+
+      <!-- 左側快速切換下拉選單 -->
+      <select class="header-mantra-select" id="headerMantraSelect" title="快速選擇十小咒並進入持誦">
+        <option value="">📿 切換咒語...</option>
+        <option value="1">1. 如意寶輪王陀羅尼</option>
+        <option value="2">2. 消災吉祥神咒</option>
+        <option value="3">3. 功德寶山神咒</option>
+        <option value="4">4. 準提神咒</option>
+        <option value="5">5. 聖無量壽決定光明王</option>
+        <option value="6">6. 藥師灌頂真言</option>
+        <option value="7">7. 觀音靈感真言</option>
+        <option value="8">8. 七佛滅罪真言</option>
+        <option value="9">9. 往生淨土神咒</option>
+        <option value="10">10. 大吉祥天女咒</option>
+      </select>
+
+      <div class="header-actions">
+        <!-- 字級縮放切換 (標準 / 大字 / 特大字) -->
+        <div class="font-size-switcher" title="調節經文字級大小">
+          <button class="font-btn" data-size="standard" title="標準字級">A-</button>
+          <button class="font-btn active" data-size="large" title="大字模式（推薦手機）">A</button>
+          <button class="font-btn" data-size="xlarge" title="特大字模式">A+</button>
+        </div>
+
+        <!-- 主題切換 (暖沙禪石 / 曜石古茶) -->
+        <button class="btn-icon" id="themeToggleBtn" title="切換日修暖沙/夜修曜石主題">
+          <span id="themeIcon">☀️</span>
+          <span class="btn-text" id="themeLabel">暖沙</span>
+        </button>
+
+        <!-- 底本與校勘說明 -->
+        <button class="btn-icon" id="aboutBtn" title="查看 CBETA 大藏經原典校勘出處">
+          <span>📖</span>
+          <span class="btn-text">CBETA 底本</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主版面容器 -->
+  <main class="main-container">
+
+
+
+      <!-- 經典甘露・十小咒 CBETA 原典法語輪播 -->
+    <div class="zen-quote-carousel" id="cbetaQuoteCarousel">
+      <div class="quote-carousel-header">
+        <div class="quote-carousel-badge">
+          <span>✨</span> 經典甘露・十小咒 CBETA 原典法語
+        </div>
+        <div class="quote-carousel-controls">
+          <button class="quote-nav-btn" id="quotePrevBtn" title="上一句">◄</button>
+          <span class="quote-nav-indicator" id="quoteIndicator">1 / 10</span>
+          <button class="quote-nav-btn" id="quoteNextBtn" title="下一句">►</button>
+        </div>
+      </div>
+      <div class="quote-carousel-body">
+        <div class="quote-carousel-text" id="quoteCarouselText">「若有受持讀誦此陀羅尼者，能滅五逆無間重罪，一切病苦悉皆消滅，求富貴智慧悉得相應。」</div>
+        <div class="quote-carousel-meta">
+          <div class="quote-carousel-source" id="quoteCarouselSource">——《如意輪陀羅尼經》（CBETA T20, no. 1087，唐・菩提流志譯）</div>
+          <div class="quote-carousel-actions">
+            <button class="btn-goto-mantra" id="quoteGotoMantraBtn">進入此咒誦持 ➔</button>
+            <a class="btn-cbeta-link" id="quoteCbetaLink" target="_blank" rel="noopener noreferrer">CBETA 原典 ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="quote-dots-bar" id="quoteDotsBar"></div>
+    </div>
+
+    <!-- 儀表板 -->
+    <div class="zen-stats-bar">
+      <div class="stat-item">
+        早晚課進度：<strong id="completedMantrasCount">0</strong> / 10 咒
+      </div>
+      <div class="stat-item">
+        累計誦持：<strong id="totalChantCount">0</strong> 遍
+      </div>
+      <div class="stat-item">
+        校勘底本：<strong>CBETA 大藏經原典校勘</strong>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         視圖 A：首頁總覽 (3 種佈局切換)
+         ==================================================================== -->
+    <section id="homeView">
+      <div class="sub-nav-bar">
+        <div class="nav-label">
+          <span>📿</span> 漢傳早晚課十小咒
+        </div>
+        <div class="layout-toggle-group">
+          <button class="layout-tab active" data-home-layout="grid">卡片盤</button>
+          <button class="layout-tab" data-home-layout="list">折本目錄</button>
+          <button class="layout-tab" data-home-layout="carousel">極簡輪轉</button>
+        </div>
+      </div>
+
+      <!-- 首頁佈局 1：卡片盤 -->
+      <div id="homeLayoutGrid" class="mantra-grid"></div>
+
+      <!-- 首頁佈局 2：折本目錄 -->
+      <div id="homeLayoutList" class="mantra-scroll-list" style="display: none;"></div>
+
+      <!-- 首頁佈局 3：極簡輪轉 -->
+      <div id="homeLayoutCarousel" class="mantra-focus-carousel" style="display: none;">
+        <div class="focus-circle" id="focusCircleNum">1</div>
+        <div class="focus-title" id="focusTitle">如意寶輪王陀羅尼</div>
+        <div class="focus-theme" id="focusTheme">消滅重罪・得大智慧</div>
+        <div class="focus-benefit" id="focusBenefit">一心念誦，能得佛光注照，得大智慧，所求如意，命終往生極樂。</div>
+        <button class="btn-focus-action" id="focusEnterBtn">進入誦持背誦</button>
+        <div class="focus-nav-arrows">
+          <button class="btn-icon" id="focusPrevBtn">◄ 前一咒</button>
+          <span style="font-size:0.85rem; color:var(--text-muted);" id="focusIndexPill">1 / 10</span>
+          <button class="btn-icon" id="focusNextBtn">下一咒 ►</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         視圖 B：各咒語誦持與背誦室 (3 種佈局 + 3 種閱讀模式)
+         ==================================================================== -->
+    <section id="practiceView" class="practice-view">
+      
+      <div class="practice-header">
+        <div class="practice-title-group">
+          <button class="btn-back" id="backToHomeBtn">◄ 返回目錄</button>
+          <div class="cur-mantra-name" id="curMantraName">如意寶輪王陀羅尼</div>
+        </div>
+      </div>
+
+      <!-- 統整排版視野 (3種) 與背誦演練 (3種) 於同一列控制台，附小字輔助說明 -->
+      <div class="unified-practice-toolbar">
+        <!-- 瀏覽排版視野 -->
+        <div class="toolbar-group">
+          <div class="toolbar-group-label">📖 瀏覽排版</div>
+          <div class="toolbar-btn-wrap">
+            <button class="practice-tab-btn layout-tab active" data-practice-layout="full" title="全篇連貫三音對照排版">
+              <span class="tab-main">全文誦持</span>
+              <span class="tab-sub">整篇連貫全覽</span>
+            </button>
+            <button class="practice-tab-btn layout-tab" data-practice-layout="step" title="依課誦斷句大字引導">
+              <span class="tab-main">逐句沉浸</span>
+              <span class="tab-sub">課誦分句大字</span>
+            </button>
+            <button class="practice-tab-btn layout-tab" data-practice-layout="split" title="左側經文右側經典出處義理">
+              <span class="tab-main">義理對照</span>
+              <span class="tab-sub">出處經軌對照</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <!-- 背誦演練深度 -->
+        <div class="toolbar-group">
+          <div class="toolbar-group-label">🎯 背誦練習</div>
+          <div class="toolbar-btn-wrap">
+            <button class="practice-tab-btn mode-tab active" data-mode="read" title="完整顯示國字、注音與通用拼音">
+              <span class="tab-main">一般誦讀</span>
+              <span class="tab-sub">字音完整顯示</span>
+            </button>
+            <button class="practice-tab-btn mode-tab" data-mode="mask" title="隱藏部分字格，點擊字格翻開微光提示">
+              <span class="tab-main">挖空遮蔽</span>
+              <span class="tab-sub">點擊翻開測驗</span>
+            </button>
+            <button class="practice-tab-btn mode-tab" data-mode="verify" title="打字默寫，系統即時逐字比對正誤">
+              <span class="tab-main">背誦檢驗</span>
+              <span class="tab-sub">默寫即時校對</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 控制列：注音/拼音顯隱、校正字音自訂、手動持誦計次 -->
+      <div class="practice-controls-panel">
+        <div class="toggle-labels">
+          <label class="toggle-item">
+            <input type="checkbox" id="toggleZh" checked>
+            <span>注音 (ㄅㄆㄇ)</span>
+          </label>
+          <label class="toggle-item">
+            <input type="checkbox" id="togglePy" checked>
+            <span>通用拼音</span>
+          </label>
+          <!-- 自訂校訂字音按鈕 -->
+          <button class="btn-icon" id="openCustomPronounceBtn" title="修改或校正經文國字、注音符號與通用拼音" style="padding:0.25rem 0.6rem; font-size:0.8rem;">
+            ✏️ 校訂字音／國字
+          </button>
+        </div>
+
+        <!-- 持誦遍數手動登記器 -->
+        <div class="chant-counter-group">
+          <span style="color:var(--text-muted);">本咒持誦：</span>
+          <strong id="curMantraCount" style="color:var(--accent-gold); font-size:1.1rem;">0</strong>
+          <span style="color:var(--text-muted);">遍</span>
+          <button class="btn-icon" id="incCountBtn" style="padding:0.25rem 0.6rem; font-weight:600; color:var(--accent-gold);">+1 遍</button>
+          <button class="btn-icon" id="resetCountBtn" style="padding:0.25rem 0.5rem; font-size:0.75rem; color:var(--text-muted);" title="重置本咒計數">歸零</button>
+        </div>
+      </div>
+
+      <!-- 自訂經文國字與字音校正面板 -->
+      <div id="customPronouncePanel" class="custom-pronounce-panel">
+        <div class="custom-pronounce-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; padding-bottom:0.6rem; margin-bottom:0.8rem; border-bottom:1px solid var(--border-main);">
+          <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+            <div style="font-weight:700; color:var(--accent-gold); font-size:0.95rem;">✏️ 校訂經文國字與讀音</div>
+            <div style="display:flex; align-items:center; gap:0.3rem;">
+              <button class="btn-icon" id="customPrevMantraBtn" style="padding:0.25rem 0.55rem; font-size:0.8rem;" title="切換至上一咒校訂">◄ 上一咒</button>
+              <select id="customPanelMantraSelect" class="header-mantra-select" style="font-size:0.85rem; padding:0.25rem 0.5rem; max-width:210px;" title="切換正在校訂的咒語">
+                <option value="1">1. 如意寶輪王陀羅尼</option>
+                <option value="2">2. 消災吉祥神咒</option>
+                <option value="3">3. 功德寶山神咒</option>
+                <option value="4">4. 準提神咒</option>
+                <option value="5">5. 聖無量壽決定光明王</option>
+                <option value="6">6. 藥師灌頂真言</option>
+                <option value="7">7. 觀音靈感真言</option>
+                <option value="8">8. 七佛滅罪真言</option>
+                <option value="9">9. 往生淨土神咒</option>
+                <option value="10">10. 大吉祥天女咒</option>
+              </select>
+              <button class="btn-icon" id="customNextMantraBtn" style="padding:0.25rem 0.55rem; font-size:0.8rem;" title="切換至下一咒校訂">下一咒 ►</button>
+            </div>
+          </div>
+          <button class="btn-icon" id="closeCustomPronounceBtn" style="padding:0.25rem 0.65rem;">✕ 關閉</button>
+        </div>
+        <div style="display:flex; gap:0.5rem; margin-bottom:0.85rem; border-bottom:1px solid var(--border-main); padding-bottom:0.4rem;">
+          <button class="btn-icon active" id="tabPronounceWordsBtn" style="padding:0.3rem 0.8rem; font-weight:600; color:var(--accent-gold);">✏️ 逐字國字與讀音校訂</button>
+          <button class="btn-icon" id="tabPronounceLinesBtn" style="padding:0.3rem 0.8rem; color:var(--text-sub);">📝 課誦斷句與分行自訂</button>
+        </div>
+
+        <div id="sectionWordsEdit">
+          <div style="font-size:0.82rem; color:var(--text-sub); margin-bottom:0.75rem; line-height:1.6;">
+            💡 <strong>功能說明</strong>：您可以直接修改「經文國字」或「注音符號」。當您輸入注音時，系統會<strong>自動為您轉換為通用拼音帶調號</strong>！修改完成後點擊「💾 儲存自訂內容」，或點擊「📋 複製修改資料 (貼給 AI 更新底本)」。
+          </div>
+          <div class="custom-table-wrap">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th style="width:20%;">經文國字 (可修改)</th>
+                <th style="width:38%;">注音符號 (輸入自動換算拼音)</th>
+                <th style="width:42%;">漢語 / 通用拼音</th>
+              </tr>
+            </thead>
+            <tbody id="customPronounceTbody"></tbody>
+          </table>
+        </div>
+        </div>
+
+        <!-- 課誦斷句分行編輯區 -->
+        <div id="sectionLinesEdit" style="display:none; margin-bottom:1rem;">
+          <div style="font-size:0.82rem; color:var(--text-sub); margin-bottom:0.6rem; line-height:1.6;">
+            💡 <strong>課誦斷句說明</strong>：下方文字框內<strong>每一行即代表一句誦持停頓</strong>。您可以依照法鼓山課誦本或其他課誦軌範自由<strong>按 Enter 換行或調整標點</strong>。點擊「套用斷句」後，字音會自動對齊並即時反映在「全文誦持」與「逐句沉浸」模式中！
+          </div>
+          <textarea id="customLinesTextarea" style="width:100%; min-height:180px; padding:0.75rem; border:1px solid var(--border-focus); border-radius:8px; font-size:1.05rem; line-height:1.8; font-family:var(--font-serif); background:var(--bg-main); color:var(--text-main); resize:vertical;"></textarea>
+          <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+            <button class="btn-action-primary" id="applyCustomLinesBtn">💾 套用並儲存斷句分行</button>
+            <button class="btn-icon" id="resetCustomLinesBtn" title="還原此咒至底本預設斷句">🔄 還原預設斷句</button>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button class="btn-action-primary" id="saveCustomPronounceBtn">💾 儲存自訂內容</button>
+            <button class="btn-icon" id="copyCustomDataBtn" title="複製您修改好的經文與讀音資料，直接發給 AI 更新資料庫">📋 複製修改資料 (貼給 AI 更新底本)</button>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button class="btn-icon" id="resetCustomPronounceBtn" title="清除本咒自訂，恢復法鼓山課誦本官方底本">🔄 恢復本咒官方底本</button>
+            <button class="btn-icon" id="resetAllCustomPronounceBtn" title="清除所有本機暫存，全數載入最新官方校正底本 (v1.7)">⚡ 全數重設為官方底本</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 遮蔽等級工具列 -->
+      <div id="maskToolRow" style="display: none; margin-bottom: 1rem; align-items: center; justify-content: space-between; background: var(--bg-card); padding: 0.65rem 1rem; border-radius: 10px; border: 1px solid var(--border-main); flex-wrap: wrap; gap: 0.6rem;">
+        <div style="font-size:0.88rem; color:var(--text-sub);">
+          💡 點擊被遮住的字格，即可翻開微光提示：
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+          <button class="btn-icon" data-mask-ratio="0.3">初階 (30%)</button>
+          <button class="btn-icon" data-mask-ratio="0.6">中階 (60%)</button>
+          <button class="btn-icon" data-mask-ratio="1.0">高階 (全遮)</button>
+          <button class="btn-action-primary" id="unmaskAllBtn" style="padding:0.35rem 0.8rem; font-size:0.85rem;" title="取消遮蔽，顯示全部經文">👁️ 全部顯字</button>
+          <button class="btn-icon" id="remaskRevealedBtn" title="將翻開查看的提示字重新蓋上遮蔽">🔄 重新蓋上</button>
+        </div>
+      </div>
+
+      <!-- 咒語佈局 1：三音大字展卷台 -->
+      <div id="practiceLayoutFull" class="mantra-scroll-board"></div>
+
+      <!-- 咒語佈局 2：分句卡片流 -->
+      <div id="practiceLayoutStep" class="sentence-card-stage" style="display: none;">
+        <div class="step-indicator" id="stepIndicator">第 1 / 7 句</div>
+        <div class="stage-words-container" id="stageWordsContainer"></div>
+        <div class="stage-nav-controls">
+          <button class="btn-icon" id="stepPrevBtn">◄ 上一句</button>
+          <button class="btn-icon" id="stepNextBtn">下一句 ►</button>
+        </div>
+      </div>
+
+      <!-- 咒語佈局 3：義理雙欄台 -->
+      <div id="practiceLayoutSplit" class="split-grid-board" style="display: none;">
+        <div class="split-left-pane" id="splitLeftBoard"></div>
+        <div class="split-right-pane">
+          <div class="doc-section-title"><span>📜</span> 典籍原典出處</div>
+          <div class="doc-content" id="splitDocSource"></div>
+          <a class="cbeta-link" id="splitDocCbetaLink" target="_blank" rel="noopener noreferrer">在 CBETA 線上閱讀原經軌 ↗</a>
+
+          <div class="doc-section-title" style="margin-top:1.5rem;"><span>✨</span> 經文功德要旨</div>
+          <div class="doc-content" id="splitDocBenefit"></div>
+
+          <div class="doc-section-title"><span>📖</span> 經義釋義與辭典考證</div>
+          <div class="doc-content" id="splitDocMeaning"></div>
+        </div>
+      </div>
+
+      <!-- 默誦核對工具面板 -->
+      <div id="verifyPanel" class="verify-section" style="display: none;">
+        <div class="doc-section-title"><span>✍️</span> 默寫背誦與文字核對</div>
+        <div style="font-size:0.88rem; color:var(--text-sub); margin-bottom:0.75rem;">
+          請憑記憶在下方輸入本咒經文（無需輸入標點符號），系統將為您逐字比對漏字、錯字與精準度：
+        </div>
+        <textarea class="verify-textarea" id="verifyInput" placeholder="在此默寫經文... 例如：南無佛馱耶 南無達摩耶..."></textarea>
+        <div class="verify-btn-row">
+          <button class="btn-action-primary" id="startVerifyBtn">🔍 開始逐字核對</button>
+          <button class="btn-icon" id="clearVerifyBtn">清空輸入</button>
+          <div id="verifyScoreBadge" style="font-size:0.9rem; font-weight:600; color:var(--accent-gold);"></div>
+        </div>
+
+        <div class="verify-result-box" id="verifyResultBox">
+          <div style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.5rem;">比對結果對照（綠色：正確，紅色：錯字，金底：遺漏）：</div>
+          <div id="diffOutput" style="line-height:2;"></div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- 自訂禪意浮層通知 (Toast) 嚴禁原生 alert -->
+  <div class="zen-toast" id="zenToast">已完成複製</div>
+
+  <!-- 典籍校勘說明彈窗 (Modal) -->
+  <div class="zen-modal-overlay" id="zenModalOverlay">
+    <div class="zen-modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">CBETA 大藏經底本與校勘說明</div>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-actions">
+        <button class="btn-action-primary" id="modalCloseBtn">確定關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 載入十小咒資料庫 -->
+  <script src="data/mantras.js?v=1.7"></script>
+
+  <script>
+    // 確保 MANTRAS_DATA 全域可用
+    const MANTRAS_DATA = (typeof TEN_MANTRAS !== 'undefined' ? TEN_MANTRAS : (window.TEN_MANTRAS || []));
+    if (typeof window !== 'undefined') {
+      window.MANTRAS_DATA = MANTRAS_DATA;
+    }
+    /* ==========================================================================
+       SafeStorage 防禦性快取機制 (防範 file:/// 安全性例外崩潰)
+       ========================================================================== */
+    const SafeStorage = {
+      _mem: {},
+      getItem(key) {
+        try {
+          return localStorage.getItem(key);
+        } catch (e) {
+          return this._mem[key] || null;
+        }
+      },
+      setItem(key, val) {
+        try {
+          localStorage.setItem(key, val);
+        } catch (e) {
+          this._mem[key] = String(val);
+        }
+      },
+      removeItem(key) {
+        try {
+          localStorage.removeItem(key);
+        } catch (e) {}
+        delete this._mem[key];
+      },
+      clear() {
+        try {
+          localStorage.clear();
+        } catch (e) {}
+        this._mem = {};
+      }
+    };
+
+    /* ==========================================================================
+       應用程式狀態 (State Machine)
+       ========================================================================== */
+    const AppState = {
+      curView: 'home',               // 'home' | 'practice'
+      homeLayout: 'grid',            // 'grid' | 'list' | 'carousel'
+      practiceLayout: 'full',        // 'full' | 'step' | 'split'
+      practiceMode: 'read',          // 'read' | 'mask' | 'verify'
+      curMantraId: 1,                // 1 ~ 10
+      curSentenceIdx: 0,
+      showZh: true,
+      showPy: true,
+      maskRatio: 0.3,
+      fontSize: 'large',             // 'standard' | 'large' | 'xlarge'
+      quoteIdx: 0,
+      quoteTimer: null,
+      chantCounts: {},               // { [mantraId]: count }
+      customPronounce: {},           // { [mantraId]: { "sIdx_wIdx": { zh, py } } }
+      theme: 'stone'
+    };
+
+    // 十小咒 CBETA 大藏經原典名句精選集（精確引用佛典）
+    const CBETA_QUOTES = [
+      {
+        id: 1,
+        mantraId: 1,
+        mantraName: "如意寶輪王陀羅尼",
+        text: "「若有受持讀誦此陀羅尼者，能滅五逆無間重罪，一切病苦悉皆消滅，求富貴智慧悉得相應。」",
+        source: "《如意輪陀羅尼經》（CBETA T20, no. 1087，唐・菩提流志譯）",
+        cbetaUrl: "https://cbetaonline.dila.edu.tw/zh/T1087"
+      },
+      {
+        id: 2,
+        mantraId: 2,
+        mantraName: "消災吉祥神咒",
+        text: "「若遇羅睺、彗星諸惡星凌犯本命宮宿者，但當一心讀誦此真言百八遍，災障即得消滅，吉祥安泰。」",
+        source: "《佛說熾盛光大威德消災吉祥陀羅尼經》（CBETA T19, no. 963，唐・不空譯）",
+        cbetaUrl: "https://cbetaonline.dila.edu.tw/zh/T0963"
+      },
+      {
+        id: 3,
+        mantraId: 3,
+        mantraName: "功德寶山神咒",
+        text: "「誦此陀羅尼一遍，如禮大佛名經三千五百佛，四重五逆十惡等罪皆得消滅，命終之時見佛來迎，生極樂界。」",
+        source: "《大乘密嚴經》（CBETA T16, no. 681，唐・地婆訶羅譯）",
+        cbetaUrl: "https://cbetaonline.dila.edu.tw/zh/T0681"
+      },
+      {
+        id: 4,
+        mantraId: 4,
+        mantraName: "準提神咒",
+        text: "「此尊那大明陀羅尼，過去一切諸佛已說、未來諸佛當說、現在諸佛今說。受持讀誦，求福慧、求無礙辯才，悉得如意。」",
+        source: "《佛說七俱胝佛母心大准提陀羅尼經》（CBETA T20, no. 1077，唐・地婆訶羅譯）",
+        cbetaUrl: "https://cbetaonline.dila.edu.tw/zh/T1077"
+      },
+      {
+        id: 5,
+        mantraId: 5,
+        mantraName: "聖無量壽決定光明王陀羅尼",
+        text: "「若人能受持讀誦此神咒者，雖有壽限短促、合受夭折，亦得增壽至百歲，身心康寧，命終得生彼無量壽佛淨土。」",
+        source: "《佛說大乘聖無量壽決定光明王如來陀羅尼經》（CBETA T19, no. 937，宋・法天譯）",
+        cbetaUrl: "https://cbetaonline.dila.edu.tw/zh/T0937"
+      },
+      {
+        id: 6,
+        mantraId: 6,
+        mantraName: "藥師灌頂真言",
+        text: "「爾時光中說此咒已，大地震動，放大光明，一切眾生病苦皆除，受安隱樂，所求願滿。」",
+        source: "《藥師琉璃光如來本願功德經》（CBETA T14, no. 450，唐・玄奘譯）",
+        cbetaUrl: "https://cbetaonline.dila.edu.tw/zh/T0450"
+      },
+      {
+        id: 7,
+        mantraId: 7,
+        mantraName: "觀音靈感真言",
+        text: "「白衣大士普施無畏，尋聲救苦。凡有急難恐怖，一心稱念大悲神咒，觀音神力自然護佑，逢凶化吉。」",
+        source: "《諸經日誦集要》（CBETA J32, no. B271，明代課誦傳承）",
+        cbetaUrl: "https://cbetaonline.dila.edu.tw/zh/J0271"
+      },
+      {
+        id: 8,
+        mantraId: 8,
+        mantraName: "七佛滅罪真言",
+        text: "「七佛同時放無量威光，說此大陀羅尼：若有至心誦滿八百遍者，五逆十惡眾重罪業，皆悉消滅無餘，還得戒品清淨。」",
+        source: "《大方等陀羅尼經》（CBETA T21, no. 1339，後晉・法眾譯）",
+        cbetaUrl: "https://cbetaonline.dila.edu.tw/zh/T1339"
+      },
+      {
+        id: 9,
+        mantraId: 9,
+        mantraName: "拔一切業障根本得生淨土陀羅尼",
+        text: "「若有善男子善女人能誦此咒者，阿彌陀佛常住其頂，日夜擁護；現世常得安隱，臨命終時任運往生極樂世界。」",
+        source: "《拔一切業障根本得生淨土神咒》（CBETA T12, no. 368，劉宋・求那跋陀羅譯）",
+        cbetaUrl: "https://cbetaonline.dila.edu.tw/zh/T0368"
+      },
+      {
+        id: 10,
+        mantraId: 10,
+        mantraName: "大吉祥天女咒",
+        text: "「能受持讀誦此經及誦此真言者，我當令彼資生之具、金銀珍寶、牛羊田宅，悉皆豐足，無所乏少，得大安樂吉祥。」",
+        source: "《金光明最勝王經·大吉祥天女品》（CBETA T16, no. 665，唐・義淨譯）",
+        cbetaUrl: "https://cbetaonline.dila.edu.tw/zh/T0665"
+      }
+    ];
+
+    /* ==========================================================================
+       自訂字音校訂系統 (Pronunciation Customizer)
+       ========================================================================== */
+    function loadCustomPronunciations() {
+      const currentVer = '1.8';
+      const storedVer = SafeStorage.getItem('zen_custom_pronounce_ver');
+      if (storedVer !== currentVer) {
+        // 版本更新時，主動清除舊版結構錯位之本機快取，確保呈現法鼓山課誦本最新精校底本
+        SafeStorage.removeItem('zen_custom_pronounce');
+        SafeStorage.setItem('zen_custom_pronounce_ver', currentVer);
+        AppState.customPronounce = {};
+        return;
+      }
+      const saved = SafeStorage.getItem('zen_custom_pronounce');
+      if (saved) {
+        try {
+          AppState.customPronounce = JSON.parse(saved);
+        } catch (e) {}
+      }
+    }
+
+// 完整教育部注音符號轉通用/漢語拼音模組 (含聲調符號 ā, á, ǎ, à)
+const ZHUYIN_TO_PINYIN_MAP = {
+  // 聲母 + 韻母完整音節映射 (無調號 base syllable)
+  // 單韻母與雙韻母
+  "ㄚ": "a", "ㄛ": "o", "ㄜ": "e", "ㄝ": "e", "ㄞ": "ai", "ㄟ": "ei", "ㄠ": "ao", "ㄡ": "ou",
+  "ㄢ": "an", "ㄣ": "en", "ㄤ": "ang", "ㄥ": "eng", "ㄦ": "er",
+  "ㄧ": "yi", "ㄨ": "wu", "ㄩ": "yu",
+  "ㄧㄚ": "ya", "ㄧㄛ": "yo", "ㄧㄝ": "ye", "ㄧㄞ": "yai", "ㄧㄠ": "yao", "ㄧㄡ": "you",
+  "ㄧㄢ": "yan", "ㄧㄣ": "yin", "ㄧㄤ": "yang", "ㄧㄥ": "ying",
+  "ㄨㄚ": "wa", "ㄨㄛ": "wo", "ㄨㄞ": "wai", "ㄨㄟ": "wei", "ㄨㄢ": "wan", "ㄨㄣ": "wen", "ㄨㄤ": "wang", "ㄨㄥ": "weng",
+  "ㄩㄝ": "yue", "ㄩㄢ": "yuan", "ㄩㄣ": "yun", "ㄩㄥ": "yong",
+  
+  // ㄅ
+  "ㄅㄚ": "ba", "ㄅㄛ": "bo", "ㄅㄞ": "bai", "ㄅㄟ": "bei", "ㄅㄠ": "bao", "ㄅㄢ": "ban", "ㄅㄣ": "ben", "ㄅㄤ": "bang", "ㄅㄥ": "beng",
+  "ㄅㄧ": "bi", "ㄅㄧㄝ": "bie", "ㄅㄧㄠ": "biao", "ㄅㄧㄢ": "bian", "ㄅㄧㄣ": "bin", "ㄅㄧㄥ": "bing",
+  "ㄅㄨ": "bu",
+  
+  // ㄆ
+  "ㄆㄚ": "pa", "ㄆㄛ": "po", "ㄆㄞ": "pai", "ㄆㄟ": "pei", "ㄆㄠ": "pao", "ㄆㄡ": "pou", "ㄆㄢ": "pan", "ㄆㄣ": "pen", "ㄆㄤ": "pang", "ㄆㄥ": "peng",
+  "ㄆㄧ": "pi", "ㄆㄧㄝ": "pie", "ㄆㄧㄠ": "piao", "ㄆㄧㄢ": "pian", "ㄆㄧㄣ": "pin", "ㄆㄧㄥ": "ping",
+  "ㄆㄨ": "pu",
+
+  // ㄇ
+  "ㄇㄚ": "ma", "ㄇㄛ": "mo", "ㄇㄜ": "me", "ㄇㄞ": "mai", "ㄇㄟ": "mei", "ㄇㄠ": "mao", "ㄇㄡ": "mou", "ㄇㄢ": "man", "ㄇㄣ": "men", "ㄇㄤ": "mang", "ㄇㄥ": "meng",
+  "ㄇㄧ": "mi", "ㄇㄧㄝ": "mie", "ㄇㄧㄠ": "miao", "ㄇㄧㄡ": "miu", "ㄇㄧㄢ": "mian", "ㄇㄧㄣ": "min", "ㄇㄧㄥ": "ming",
+  "ㄇㄨ": "mu",
+
+  // ㄈ
+  "ㄈㄚ": "fa", "ㄈㄛ": "fo", "ㄈㄟ": "fei", "ㄈㄡ": "fou", "ㄈㄢ": "fan", "ㄈㄣ": "fen", "ㄈㄤ": "fang", "ㄈㄥ": "feng", "ㄈㄨ": "fu",
+
+  // ㄉ
+  "ㄉㄚ": "da", "ㄉㄜ": "de", "ㄉㄞ": "dai", "ㄉㄟ": "dei", "ㄉㄠ": "dao", "ㄉㄡ": "dou", "ㄉㄢ": "dan", "ㄉㄣ": "den", "ㄉㄤ": "dang", "ㄉㄥ": "deng",
+  "ㄉㄧ": "di", "ㄉㄧㄚ": "dia", "ㄉㄧㄝ": "die", "ㄉㄧㄠ": "diao", "ㄉㄧㄡ": "diu", "ㄉㄧㄢ": "dian", "ㄉㄧㄤ": "diang", "ㄉㄧㄥ": "ding",
+  "ㄉㄨ": "du", "ㄉㄨㄛ": "duo", "ㄉㄨㄟ": "dui", "ㄉㄨㄢ": "duan", "ㄉㄨㄣ": "dun", "ㄉㄨㄥ": "dong",
+
+  // ㄊ
+  "ㄊㄚ": "ta", "ㄊㄜ": "te", "ㄊㄞ": "tai", "ㄊㄠ": "tao", "ㄊㄡ": "tou", "ㄊㄢ": "tan", "ㄊㄤ": "tang", "ㄊㄥ": "teng",
+  "ㄊㄧ": "ti", "ㄊㄧㄝ": "tie", "ㄊㄧㄠ": "tiao", "ㄊㄧㄢ": "tian", "ㄊㄧㄥ": "ting",
+  "ㄊㄨ": "tu", "ㄊㄨㄛ": "tuo", "ㄊㄨㄟ": "tui", "ㄊㄨㄢ": "tuan", "ㄊㄨㄣ": "tun", "ㄊㄨㄥ": "tong",
+
+  // ㄋ
+  "ㄋㄚ": "na", "ㄋㄜ": "ne", "ㄋㄞ": "nai", "ㄋㄟ": "nei", "ㄋㄠ": "nao", "ㄋㄡ": "nou", "ㄋㄢ": "nan", "ㄋㄣ": "nen", "ㄋㄤ": "nang", "ㄋㄥ": "neng",
+  "ㄋㄧ": "ni", "ㄋㄧㄝ": "nie", "ㄋㄧㄠ": "niao", "ㄋㄧㄡ": "niu", "ㄋㄧㄢ": "nian", "ㄋㄧㄣ": "nin", "ㄋㄧㄤ": "niang", "ㄋㄧㄥ": "ning",
+  "ㄋㄨ": "nu", "ㄋㄨㄛ": "nuo", "ㄋㄨㄢ": "nuan", "ㄋㄨㄣ": "nun", "ㄋㄨㄥ": "nong", "ㄋㄩ": "nü", "ㄋㄩㄝ": "nüe",
+
+  // ㄌ
+  "ㄌㄚ": "la", "ㄌㄜ": "le", "ㄌㄞ": "lai", "ㄌㄟ": "lei", "ㄌㄠ": "lao", "ㄌㄡ": "lou", "ㄌㄢ": "lan", "ㄌㄤ": "lang", "ㄌㄥ": "leng",
+  "ㄌㄧ": "li", "ㄌㄧㄚ": "lia", "ㄌㄧㄝ": "lie", "ㄌㄧㄠ": "liao", "ㄌㄧㄡ": "liu", "ㄌㄧㄢ": "lian", "ㄌㄧㄣ": "lin", "ㄌㄧㄤ": "liang", "ㄌㄧㄥ": "ling",
+  "ㄌㄨ": "lu", "ㄌㄨㄛ": "luo", "ㄌㄨㄢ": "luan", "ㄌㄨㄣ": "lun", "ㄌㄨㄥ": "long", "ㄌㄩ": "lü", "ㄌㄩㄝ": "lüe",
+
+  // ㄍ
+  "ㄍㄚ": "ga", "ㄍㄜ": "ge", "ㄍㄞ": "gai", "ㄍㄟ": "gei", "ㄍㄠ": "gao", "ㄍㄡ": "gou", "ㄍㄢ": "gan", "ㄍㄣ": "gen", "ㄍㄤ": "gang", "ㄍㄥ": "geng",
+  "ㄍㄨ": "gu", "ㄍㄨㄚ": "gua", "ㄍㄨㄛ": "guo", "ㄍㄨㄞ": "guai", "ㄍㄨㄟ": "gui", "ㄍㄨㄢ": "guan", "ㄍㄨㄣ": "gun", "ㄍㄨㄤ": "guang", "ㄍㄨㄥ": "gong",
+
+  // ㄎ
+  "ㄎㄚ": "ka", "ㄎㄜ": "ke", "ㄎㄞ": "kai", "ㄎㄟ": "kei", "ㄎㄠ": "kao", "ㄎㄡ": "kou", "ㄎㄢ": "kan", "ㄎㄣ": "ken", "ㄎㄤ": "kang", "ㄎㄥ": "keng",
+  "ㄎㄨ": "ku", "ㄎㄨㄚ": "kua", "ㄎㄨㄛ": "kuo", "ㄎㄨㄞ": "kuai", "ㄎㄨㄟ": "kui", "ㄎㄨㄢ": "kuan", "ㄎㄨㄣ": "kun", "ㄎㄨㄤ": "kuang", "ㄎㄨㄥ": "kong",
+
+  // ㄏ
+  "ㄏㄚ": "ha", "ㄏㄜ": "he", "ㄏㄞ": "hai", "ㄏㄟ": "hei", "ㄏㄠ": "hao", "ㄏㄡ": "hou", "ㄏㄢ": "han", "ㄏㄣ": "hen", "ㄏㄤ": "hang", "ㄏㄥ": "heng",
+  "ㄏㄨ": "hu", "ㄏㄨㄚ": "hua", "ㄏㄨㄛ": "huo", "ㄏㄨㄞ": "huai", "ㄏㄨㄟ": "hui", "ㄏㄨㄢ": "huan", "ㄏㄨㄣ": "hun", "ㄏㄨㄤ": "huang", "ㄏㄨㄥ": "hong",
+
+  // ㄐ
+  "ㄐㄧ": "ji", "ㄐㄧㄚ": "jia", "ㄐㄧㄝ": "jie", "ㄐㄧㄞ": "jiai", "ㄐㄧㄠ": "jiao", "ㄐㄧㄡ": "jiu", "ㄐㄧㄢ": "jian", "ㄐㄧㄣ": "jin", "ㄐㄧㄤ": "jiang", "ㄐㄧㄥ": "jing",
+  "ㄐㄩ": "ju", "ㄐㄩㄝ": "jue", "ㄐㄩㄢ": "juan", "ㄐㄩㄣ": "jun", "ㄐㄩㄥ": "jiong",
+
+  // ㄑ
+  "ㄑㄧ": "qi", "ㄑㄧㄚ": "qia", "ㄑㄧㄝ": "qie", "ㄑㄧㄠ": "qiao", "ㄑㄧㄡ": "qiu", "ㄑㄧㄢ": "qian", "ㄑㄧㄣ": "qin", "ㄑㄧㄤ": "qiang", "ㄑㄧㄥ": "qing",
+  "ㄑㄩ": "qu", "ㄑㄩㄝ": "que", "ㄑㄩㄢ": "quan", "ㄑㄩㄣ": "qun", "ㄑㄩㄥ": "qiong",
+
+  // ㄒ
+  "ㄒㄧ": "xi", "ㄒㄧㄚ": "xia", "ㄒㄧㄝ": "xie", "ㄒㄧㄠ": "xiao", "ㄒㄧㄡ": "xiu", "ㄒㄧㄢ": "xian", "ㄒㄧㄣ": "xin", "ㄒㄧㄤ": "xiang", "ㄒㄧㄥ": "xing",
+  "ㄒㄩ": "xu", "ㄒㄩㄝ": "xue", "ㄒㄩㄢ": "xuan", "ㄒㄩㄣ": "xun", "ㄒㄩㄥ": "xiong",
+
+  // ㄓ
+  "ㄓ": "zhi", "ㄓㄚ": "zha", "ㄓㄜ": "zhe", "ㄓㄞ": "zhai", "ㄓㄟ": "zhei", "ㄓㄠ": "zhao", "ㄓㄡ": "zhou", "ㄓㄢ": "zhan", "ㄓㄣ": "zhen", "ㄓㄤ": "zhang", "ㄓㄥ": "zheng",
+  "ㄓㄨ": "zhu", "ㄓㄨㄚ": "zhua", "ㄓㄨㄛ": "zhuo", "ㄓㄨㄞ": "zhuai", "ㄓㄨㄟ": "zhui", "ㄓㄨㄢ": "zhuan", "ㄓㄨㄣ": "zhun", "ㄓㄨㄤ": "zhuang", "ㄓㄨㄥ": "zhong",
+
+  // ㄔ
+  "ㄔ": "chi", "ㄔㄚ": "cha", "ㄔㄜ": "che", "ㄔㄞ": "chai", "ㄔㄠ": "chao", "ㄔㄡ": "chou", "ㄔㄢ": "chan", "ㄔㄣ": "chen", "ㄔㄤ": "chang", "ㄔㄥ": "cheng",
+  "ㄔㄨ": "chu", "ㄔㄨㄚ": "chua", "ㄔㄨㄛ": "chuo", "ㄔㄨㄞ": "chuai", "ㄔㄨㄟ": "chui", "ㄔㄨㄢ": "chuan", "ㄔㄨㄣ": "chun", "ㄔㄨㄤ": "chuang", "ㄔㄨㄥ": "chong",
+
+  // ㄕ
+  "ㄕ": "shi", "ㄕㄚ": "sha", "ㄕㄜ": "she", "ㄕㄞ": "shai", "ㄕㄟ": "shei", "ㄕㄠ": "shao", "ㄕㄡ": "shou", "ㄕㄢ": "shan", "ㄕㄣ": "shen", "ㄕㄤ": "shang", "ㄕㄥ": "sheng",
+  "ㄕㄨ": "shu", "ㄕㄨㄚ": "shua", "ㄕㄨㄛ": "shuo", "ㄕㄨㄞ": "shuai", "ㄕㄨㄟ": "shui", "ㄕㄨㄢ": "shuan", "ㄕㄨㄣ": "shun", "ㄕㄨㄤ": "shuang",
+
+  // ㄖ
+  "ㄖ": "ri", "ㄖㄜ": "re", "ㄖㄠ": "rao", "ㄖㄡ": "rou", "ㄖㄢ": "ran", "ㄖㄣ": "ren", "ㄖㄤ": "rang", "ㄖㄥ": "reng",
+  "ㄖㄨ": "ru", "ㄖㄨㄚ": "rua", "ㄖㄨㄛ": "ruo", "ㄖㄨㄟ": "rui", "ㄖㄨㄢ": "ruan", "ㄖㄨㄣ": "run", "ㄖㄨㄥ": "rong",
+
+  // ㄗ
+  "ㄗ": "zi", "ㄗㄚ": "za", "ㄗㄜ": "ze", "ㄗㄞ": "zai", "ㄗㄟ": "zei", "ㄗㄠ": "zao", "ㄗㄡ": "zou", "ㄗㄢ": "zan", "ㄗㄣ": "zen", "ㄗㄤ": "zang", "ㄗㄥ": "zeng",
+  "ㄗㄨ": "zu", "ㄗㄨㄛ": "zuo", "ㄗㄨㄟ": "zui", "ㄗㄨㄢ": "zuan", "ㄗㄨㄣ": "zun", "ㄗㄨㄥ": "zong",
+
+  // ㄘ
+  "ㄘ": "ci", "ㄘㄚ": "ca", "ㄘㄜ": "ce", "ㄘㄞ": "cai", "ㄘㄠ": "cao", "ㄘㄡ": "cou", "ㄘㄢ": "can", "ㄘㄣ": "cen", "ㄘㄤ": "cang", "ㄘㄥ": "ceng",
+  "ㄘㄨ": "cu", "ㄘㄨㄛ": "cuo", "ㄘㄨㄟ": "cui", "ㄘㄨㄢ": "cuan", "ㄘㄨㄣ": "cun", "ㄘㄨㄥ": "cong",
+
+  // ㄙ
+  "ㄙ": "si", "ㄙㄚ": "sa", "ㄙㄜ": "se", "ㄙㄞ": "sai", "ㄙㄠ": "sao", "ㄙㄡ": "sou", "ㄙㄢ": "san", "ㄙㄣ": "sen", "ㄙㄤ": "sang", "ㄙㄥ": "seng",
+  "ㄙㄨ": "su", "ㄙㄨㄛ": "suo", "ㄙㄨㄟ": "sui", "ㄙㄨㄢ": "suan", "ㄙㄨㄣ": "sun", "ㄙㄨㄥ": "song"
+};
+
+function autoConvertZhuyinToPinyin(zhuyinStr) {
+  if (!zhuyinStr) return '';
+  zhuyinStr = zhuyinStr.trim();
+  if (!zhuyinStr) return '';
+
+  const toneSymbols = { 'ˊ': 2, 'ˇ': 3, 'ˋ': 4, '˙': 5 };
+  let tone = 1;
+  let cleanZh = '';
+
+  if (zhuyinStr.startsWith('˙')) {
+    tone = 5;
+    cleanZh = zhuyinStr.slice(1);
+  } else {
+    const lastChar = zhuyinStr[zhuyinStr.length - 1];
+    if (toneSymbols[lastChar]) {
+      tone = toneSymbols[lastChar];
+      cleanZh = zhuyinStr.slice(0, -1);
+    } else {
+      cleanZh = zhuyinStr;
+    }
+  }
+
+  let basePy = ZHUYIN_TO_PINYIN_MAP[cleanZh];
+  if (!basePy) {
+    // 嘗試容錯
+    return '';
+  }
+
+  if (tone === 5) return basePy; // 輕聲
+
+  const toneVowels = {
+    a: ['ā', 'á', 'ǎ', 'à'],
+    o: ['ō', 'ó', 'ǒ', 'ò'],
+    e: ['ē', 'é', 'ě', 'è'],
+    i: ['ī', 'í', 'ǐ', 'ì'],
+    u: ['ū', 'ú', 'ǔ', 'ù'],
+    ü: ['ǖ', 'ǘ', 'ǚ', 'ǜ'],
+    v: ['ǖ', 'ǘ', 'ǚ', 'ǜ']
+  };
+
+  const tIdx = tone - 1;
+  if (basePy.includes('a')) return basePy.replace('a', toneVowels.a[tIdx]);
+  if (basePy.includes('o')) return basePy.replace('o', toneVowels.o[tIdx]);
+  if (basePy.includes('e')) return basePy.replace('e', toneVowels.e[tIdx]);
+  if (basePy.includes('ui')) return basePy.replace('i', toneVowels.i[tIdx]);
+  if (basePy.includes('iu')) return basePy.replace('u', toneVowels.u[tIdx]);
+  if (basePy.includes('i')) return basePy.replace('i', toneVowels.i[tIdx]);
+  if (basePy.includes('u')) return basePy.replace('u', toneVowels.u[tIdx]);
+  if (basePy.includes('ü')) return basePy.replace('ü', toneVowels.ü[tIdx]);
+  return basePy;
+}
+
+
+
+
+    function getActiveWordPronounce(mantraId, sIdx, wIdx, defaultWord) {
+      const mCustom = AppState.customPronounce[mantraId];
+      if (mCustom) {
+        const key = `${sIdx}_${wIdx}`;
+        if (mCustom[key]) {
+          return {
+            char: mCustom[key].char !== undefined && mCustom[key].char !== '' ? mCustom[key].char : defaultWord.char,
+            zh: mCustom[key].zh !== undefined ? mCustom[key].zh : defaultWord.zh,
+            py: mCustom[key].py !== undefined ? mCustom[key].py : defaultWord.py
+          };
+        }
+      }
+      return defaultWord;
+    }
+
+    function openCustomPronounceModal() {
+      const panel = document.getElementById('customPronouncePanel');
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      const panelSelect = document.getElementById('customPanelMantraSelect');
+      if (panelSelect) panelSelect.value = AppState.curMantraId.toString();
+
+      const mantra = MANTRAS_DATA.find(m => m.id === AppState.curMantraId);
+      if (!mantra) return;
+
+      // 載入當前斷句文字至 textarea
+      const linesTa = document.getElementById('customLinesTextarea');
+      if (linesTa) {
+        linesTa.value = mantra.lines.map(l => l.text).join('\n');
+      }
+
+      const tbody = document.getElementById('customPronounceTbody');
+      tbody.innerHTML = '';
+
+      mantra.lines.forEach((line, sIdx) => {
+        line.words.forEach((w, wIdx) => {
+          if (w.char === '。' || w.char === '，' || w.char === '、' || w.char === ' ' || w.char === '　') return;
+
+          const curWord = getActiveWordPronounce(mantra.id, sIdx, wIdx, w);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <input type="text" class="custom-char-input" data-sidx="${sIdx}" data-widx="${wIdx}" value="${curWord.char}" maxlength="2" style="font-size:1.15rem; font-weight:600; width:55px;">
+            </td>
+            <td>
+              <input type="text" class="custom-zh-input" data-sidx="${sIdx}" data-widx="${wIdx}" value="${curWord.zh}" placeholder="例如 ㄋㄢˊ">
+            </td>
+            <td>
+              <input type="text" class="custom-py-input" id="pyInput_${sIdx}_${wIdx}" data-sidx="${sIdx}" data-widx="${wIdx}" value="${curWord.py}" placeholder="例如 nán">
+            </td>
+          `;
+
+          // 注音即時換算拼音事件監聽
+          const zhInput = tr.querySelector('.custom-zh-input');
+          const pyInput = tr.querySelector('.custom-py-input');
+          zhInput.addEventListener('input', (e) => {
+            const zhVal = e.target.value.trim();
+            const autoPy = autoConvertZhuyinToPinyin(zhVal);
+            if (autoPy) {
+              pyInput.value = autoPy;
+            }
+          });
+
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    function saveCustomPronunciations(showFeedback = true) {
+      const mantraId = AppState.curMantraId;
+      if (!AppState.customPronounce[mantraId]) {
+        AppState.customPronounce[mantraId] = {};
+      }
+
+      const charInputs = document.querySelectorAll('.custom-char-input');
+      const zhInputs = document.querySelectorAll('.custom-zh-input');
+      const pyInputs = document.querySelectorAll('.custom-py-input');
+
+      charInputs.forEach(input => {
+        const sIdx = input.dataset.sidx;
+        const wIdx = input.dataset.widx;
+        const key = `${sIdx}_${wIdx}`;
+        if (!AppState.customPronounce[mantraId][key]) AppState.customPronounce[mantraId][key] = {};
+        AppState.customPronounce[mantraId][key].char = input.value.trim();
+      });
+
+      zhInputs.forEach(input => {
+        const sIdx = input.dataset.sidx;
+        const wIdx = input.dataset.widx;
+        const key = `${sIdx}_${wIdx}`;
+        if (!AppState.customPronounce[mantraId][key]) AppState.customPronounce[mantraId][key] = {};
+        AppState.customPronounce[mantraId][key].zh = input.value.trim();
+      });
+
+      pyInputs.forEach(input => {
+        const sIdx = input.dataset.sidx;
+        const wIdx = input.dataset.widx;
+        const key = `${sIdx}_${wIdx}`;
+        if (!AppState.customPronounce[mantraId][key]) AppState.customPronounce[mantraId][key] = {};
+        AppState.customPronounce[mantraId][key].py = input.value.trim();
+      });
+
+      SafeStorage.setItem('zen_custom_pronounce', JSON.stringify(AppState.customPronounce));
+      renderMantraContent();
+      document.getElementById('customPronouncePanel').style.display = 'none';
+      const quoteBox = document.getElementById('cbetaQuoteCarousel');
+      if (quoteBox) quoteBox.style.display = 'none';
+      if (showFeedback) {
+        showToast('自訂經文國字與讀音已成功儲存於本機！');
+      }
+    }
+
+    function resetCustomPronunciations() {
+      const mantraId = AppState.curMantraId;
+      delete AppState.customPronounce[mantraId];
+      SafeStorage.setItem('zen_custom_pronounce', JSON.stringify(AppState.customPronounce));
+      SafeStorage.setItem('zen_custom_pronounce_ver', '1.7');
+      renderMantraContent();
+      openCustomPronounceModal();
+      showToast('已恢復本咒為法鼓山課誦本官方精校經文與讀音');
+    }
+
+    function resetAllCustomPronunciations() {
+      AppState.customPronounce = {};
+      SafeStorage.removeItem('zen_custom_pronounce');
+      SafeStorage.setItem('zen_custom_pronounce_ver', '1.7');
+      renderMantraContent();
+      openCustomPronounceModal();
+      showToast('已全數清除暫存，恢復為法鼓山課誦本最新官方精校版 (v1.7)');
+    }
+
+    // 複製修改後的資料，方便使用者貼給 AI
+    function copyCustomDataForAI() {
+      saveCustomPronunciations();
+      const mantraId = AppState.curMantraId;
+      const mantra = MANTRAS_DATA.find(m => m.id === mantraId);
+      const customData = AppState.customPronounce[mantraId];
+
+      if (!customData || Object.keys(customData).length === 0) {
+        showToast('您尚未修改此咒的任何經文字或字音');
+        return;
+      }
+
+      const exportPayload = {
+        mantraId: mantra.id,
+        mantraName: mantra.name,
+        customWords: customData
+      };
+
+      const jsonStr = JSON.stringify(exportPayload, null, 2);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(jsonStr).then(() => {
+          showToast('已複製！請直接在聊天框貼給 AI，AI 將為您更新到底本中。');
+        });
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = jsonStr;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('已複製！請直接在聊天框貼給 AI，AI 將為您更新到底本中。');
+      }
+    }
+
+    /* ==========================================================================
+       UI 提示與彈窗
+       ========================================================================== */
+    function showToast(msg) {
+      const toast = document.getElementById('zenToast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    function showModal(title, content) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalBody').innerHTML = content;
+      document.getElementById('zenModalOverlay').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('zenModalOverlay').style.display = 'none';
+    }
+
+    function loadSavedState() {
+      const savedTheme = SafeStorage.getItem('zen_theme') || 'stone';
+      applyTheme(savedTheme);
+
+      const savedCounts = SafeStorage.getItem('zen_mantra_counts');
+      if (savedCounts) {
+        try {
+          AppState.chantCounts = JSON.parse(savedCounts);
+        } catch (e) {}
+      }
+
+      loadCustomPronunciations();
+
+      const savedHomeLayout = SafeStorage.getItem('zen_home_layout') || 'grid';
+      setHomeLayout(savedHomeLayout);
+
+      const savedPracticeLayout = SafeStorage.getItem('zen_practice_layout') || 'full';
+      setPracticeLayout(savedPracticeLayout);
+
+      updateStatsBar();
+    }
+
+    function applyTheme(theme) {
+      AppState.theme = theme;
+      document.documentElement.setAttribute('data-theme', theme);
+      SafeStorage.setItem('zen_theme', theme);
+      document.getElementById('themeIcon').textContent = theme === 'dark' ? '🌙' : '☀️';
+      document.getElementById('themeLabel').textContent = theme === 'dark' ? '曜石' : '暖沙';
+    }
+
+    function updateStatsBar() {
+      let countSum = 0;
+      let finishedMantras = 0;
+      MANTRAS_DATA.forEach(m => {
+        const c = AppState.chantCounts[m.id] || 0;
+        countSum += c;
+        if (c > 0) finishedMantras++;
+      });
+      document.getElementById('completedMantrasCount').textContent = finishedMantras;
+      document.getElementById('totalChantCount').textContent = countSum;
+    }
+
+    /* ==========================================================================
+       首頁 3 種佈局渲染
+       ========================================================================== */
+    function renderHomeLayouts() {
+      const gridContainer = document.getElementById('homeLayoutGrid');
+      const listContainer = document.getElementById('homeLayoutList');
+      gridContainer.innerHTML = '';
+      listContainer.innerHTML = '';
+
+      MANTRAS_DATA.forEach((mantra, idx) => {
+        const count = AppState.chantCounts[mantra.id] || 0;
+
+        // 1. 卡片盤 (Grid)
+        const card = document.createElement('div');
+        card.className = 'mantra-card';
+        card.innerHTML = `
+          <div>
+            <div class="card-top">
+              <span class="card-num">第 ${idx + 1} 咒</span>
+              <span class="progress-pill">${count > 0 ? `已誦 ${count} 遍` : '未修'}</span>
+            </div>
+            <div class="card-title">${mantra.name}</div>
+            <div class="card-theme">❖ ${mantra.theme}</div>
+            <div class="card-benefit">${mantra.benefit}</div>
+          </div>
+          <div class="card-footer">
+            <span>出處：${mantra.cbetaId}</span>
+            <span style="color:var(--accent-gold); font-weight:600;">開始誦持 →</span>
+          </div>
+        `;
+        card.addEventListener('click', () => openPracticeView(mantra.id));
+        gridContainer.appendChild(card);
+
+        // 2. 經卷折本目錄 (List)
+        const listItem = document.createElement('div');
+        listItem.className = 'scroll-item';
+        const numCn = ['壹', '貳', '參', '肆', '伍', '陸', '柒', '捌', '玖', '拾'][idx];
+        listItem.innerHTML = `
+          <div class="scroll-left">
+            <div class="scroll-seq">${numCn}</div>
+            <div>
+              <span class="scroll-name">${mantra.name}</span>
+              <span class="scroll-source">(${mantra.source})</span>
+              <div style="font-size:0.82rem; color:var(--text-sub); margin-top:0.2rem;">${mantra.theme}</div>
+            </div>
+          </div>
+          <div class="scroll-action">
+            <span>${count > 0 ? `${count} 遍` : '開始'}</span>
+            <span>➔</span>
+          </div>
+        `;
+        listItem.addEventListener('click', () => openPracticeView(mantra.id));
+        listContainer.appendChild(listItem);
+      });
+
+      updateCarouselItem();
+    }
+
+    let carouselIndex = 0;
+    function updateCarouselItem() {
+      const mantra = MANTRAS_DATA[carouselIndex];
+      if (!mantra) return;
+      document.getElementById('focusCircleNum').textContent = carouselIndex + 1;
+      document.getElementById('focusTitle').textContent = mantra.name;
+      document.getElementById('focusTheme').textContent = '❖ ' + mantra.theme;
+      document.getElementById('focusBenefit').textContent = mantra.benefit;
+      document.getElementById('focusIndexPill').textContent = `${carouselIndex + 1} / ${MANTRAS_DATA.length}`;
+    }
+
+    function setHomeLayout(layout) {
+      AppState.homeLayout = layout;
+      SafeStorage.setItem('zen_home_layout', layout);
+
+      document.querySelectorAll('[data-home-layout]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-home-layout') === layout);
+      });
+
+      document.getElementById('homeLayoutGrid').style.display = layout === 'grid' ? 'grid' : 'none';
+      document.getElementById('homeLayoutList').style.display = layout === 'list' ? 'block' : 'none';
+      document.getElementById('homeLayoutCarousel').style.display = layout === 'carousel' ? 'block' : 'none';
+    }
+
+    /* ==========================================================================
+       咒語修持頁 3 種佈局渲染
+       ========================================================================== */
+    function openPracticeView(mantraId) {
+      const panel = document.getElementById('customPronouncePanel');
+      const wasPanelOpen = panel && panel.style.display === 'block';
+
+      AppState.curMantraId = mantraId;
+      AppState.curView = 'practice';
+      AppState.curSentenceIdx = 0;
+
+      document.getElementById('homeView').style.display = 'none';
+      document.getElementById('practiceView').style.display = 'block';
+
+      const mantra = MANTRAS_DATA.find(m => m.id === mantraId);
+      if (mantra) {
+        document.getElementById('curMantraName').textContent = mantra.name;
+        document.getElementById('curMantraCount').textContent = AppState.chantCounts[mantraId] || 0;
+      }
+
+      // 同步頂部下拉選單
+      const topSelect = document.getElementById('headerMantraSelect');
+      if (topSelect) topSelect.value = mantraId.toString();
+
+      // 同步校訂面板內部下拉選單
+      const panelSelect = document.getElementById('customPanelMantraSelect');
+      if (panelSelect) panelSelect.value = mantraId.toString();
+
+      renderMantraContent();
+
+      // 若校訂面板原為開啟狀態，自動暫存當前咒語的修改並無縫載入新咒語
+      if (wasPanelOpen) {
+        saveCustomPronunciations(false); // 傳入 false 避免彈出過多 toast
+        openCustomPronounceModal();
+      } else if (panel) {
+        panel.style.display = 'none';
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function setPracticeLayout(layout) {
+      AppState.practiceLayout = layout;
+      SafeStorage.setItem('zen_practice_layout', layout);
+
+      document.querySelectorAll('[data-practice-layout]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-practice-layout') === layout);
+      });
+
+      document.getElementById('practiceLayoutFull').style.display = layout === 'full' ? 'block' : 'none';
+      document.getElementById('practiceLayoutStep').style.display = layout === 'step' ? 'block' : 'none';
+      document.getElementById('practiceLayoutSplit').style.display = layout === 'split' ? 'grid' : 'none';
+
+      renderMantraContent();
+    }
+
+    function setPracticeMode(mode) {
+      AppState.practiceMode = mode;
+      document.querySelectorAll('.mode-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.getAttribute('data-mode') === mode);
+      });
+
+      document.getElementById('maskToolRow').style.display = mode === 'mask' ? 'flex' : 'none';
+      document.getElementById('verifyPanel').style.display = mode === 'verify' ? 'block' : 'none';
+
+      renderMantraContent();
+    }
+
+    function renderMantraContent() {
+      const mantra = MANTRAS_DATA.find(m => m.id === AppState.curMantraId);
+      if (!mantra) return;
+
+      // 1. 三音大字展卷台
+      const fullBoard = document.getElementById('practiceLayoutFull');
+      fullBoard.innerHTML = '';
+      
+      mantra.lines.forEach((line, sIdx) => {
+        const sBlock = document.createElement('div');
+        sBlock.className = 'mantra-sentence-block';
+        sBlock.dataset.sentenceIdx = sIdx;
+        sBlock.title = '點擊聚焦當前句';
+        sBlock.addEventListener('click', () => {
+          AppState.curSentenceIdx = sIdx;
+          highlightSentence(sIdx);
+          renderStepSentence(sIdx);
+        });
+
+        line.words.forEach((w, wIdx) => {
+          const unit = createWordElement(w, sIdx, wIdx);
+          sBlock.appendChild(unit);
+        });
+
+        fullBoard.appendChild(sBlock);
+      });
+
+      highlightSentence(AppState.curSentenceIdx);
+
+      // 2. 分句卡片流
+      renderStepSentence(AppState.curSentenceIdx);
+
+      // 3. 義理雙欄台
+      const splitLeft = document.getElementById('splitLeftBoard');
+      splitLeft.innerHTML = fullBoard.innerHTML;
+      document.getElementById('splitDocSource').textContent = mantra.source;
+      const cbetaLink = document.getElementById('splitDocCbetaLink');
+      cbetaLink.href = mantra.cbetaUrl;
+      cbetaLink.textContent = `在 CBETA 電子佛典閱讀原經軌 (${mantra.cbetaId}) ↗`;
+      document.getElementById('splitDocBenefit').textContent = mantra.benefit;
+      const meaningEl = document.getElementById('splitDocMeaning');
+      if (mantra.meaningDetail) {
+        let breakdownHtml = '';
+        if (mantra.meaningDetail.breakdown && mantra.meaningDetail.breakdown.length) {
+          breakdownHtml = `
+            <div class="meaning-breakdown-box">
+              <div class="meaning-subheading">📿 逐段梵漢消文意譯：</div>
+              ${mantra.meaningDetail.breakdown.map(b => `
+                <div class="breakdown-item">
+                  <div class="breakdown-tag">${b.section}</div>
+                  <div class="breakdown-text">${b.text}</div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+        let originHtml = '';
+        if (mantra.meaningDetail.cbetaOrigin) {
+          originHtml = `
+            <div class="meaning-origin-box">
+              <div class="meaning-subheading">🏛️ CBETA 經軌說咒因緣考：</div>
+              <div class="origin-text">${mantra.meaningDetail.cbetaOrigin}</div>
+            </div>
+          `;
+        }
+        meaningEl.innerHTML = `
+          <div class="meaning-summary">${mantra.meaningDetail.summary}</div>
+          ${breakdownHtml}
+          ${originHtml}
+        `;
+      } else {
+        meaningEl.textContent = mantra.reference;
+      }
+    }
+
+    function createWordElement(w, sIdx, wIdx) {
+      const unit = document.createElement('div');
+      unit.className = 'word-unit';
+
+      const isSpace = w.char === ' ' || w.char === '　';
+      if (isSpace) {
+        unit.className = 'word-unit word-spacer';
+        unit.innerHTML = `
+          <div class="ruby-bopomofo" style="visibility:hidden;">&nbsp;</div>
+          <div class="ruby-char" style="width:1.5rem; visibility:hidden;">&nbsp;</div>
+          <div class="ruby-pinyin" style="visibility:hidden;">&nbsp;</div>
+        `;
+        return unit;
+      }
+
+      const isPunctuation = w.char === '。' || w.char === '，' || w.char === '、';
+
+      if (isPunctuation) {
+        unit.innerHTML = `
+          <div class="ruby-bopomofo"></div>
+          <div class="ruby-char" style="font-size:1.5rem; min-width:0.6em;">${w.char}</div>
+          <div class="ruby-pinyin"></div>
+        `;
+        return unit;
+      }
+
+      // 套用自訂字音
+      const activeWord = getActiveWordPronounce(AppState.curMantraId, sIdx, wIdx, w);
+
+      // 遮蔽模式
+      let isMasked = false;
+      if (AppState.practiceMode === 'mask') {
+        const seed = (sIdx * 17 + wIdx * 23 + AppState.curMantraId) % 100 / 100;
+        if (seed < AppState.maskRatio) {
+          isMasked = true;
+        }
+      }
+
+      if (isMasked) {
+        unit.classList.add('masked');
+        unit.title = '點擊翻開微光提示';
+        unit.addEventListener('click', (e) => {
+          e.stopPropagation();
+          unit.classList.toggle('revealed');
+        });
+      }
+
+      unit.innerHTML = `
+        <div class="ruby-bopomofo" style="display:${AppState.showZh ? 'block' : 'none'}">${activeWord.zh}</div>
+        <div class="ruby-char">${activeWord.char}</div>
+        <div class="ruby-pinyin" style="display:${AppState.showPy ? 'block' : 'none'}">${activeWord.py}</div>
+      `;
+      return unit;
+    }
+
+    function renderStepSentence(sIdx) {
+      const mantra = MANTRAS_DATA.find(m => m.id === AppState.curMantraId);
+      if (!mantra || !mantra.lines[sIdx]) return;
+
+      document.getElementById('stepIndicator').textContent = `第 ${sIdx + 1} / ${mantra.lines.length} 句`;
+      const container = document.getElementById('stageWordsContainer');
+      container.innerHTML = '';
+
+      const line = mantra.lines[sIdx];
+      line.words.forEach((w, wIdx) => {
+        const unit = createWordElement(w, sIdx, wIdx);
+        container.appendChild(unit);
+      });
+    }
+
+    function highlightSentence(sIdx) {
+      document.querySelectorAll('.speaking-active').forEach(el => el.classList.remove('speaking-active'));
+      const targets = document.querySelectorAll(`[data-sentence-idx="${sIdx}"]`);
+      targets.forEach(el => el.classList.add('speaking-active'));
+    }
+
+    function incrementMantraCount() {
+      const mid = AppState.curMantraId;
+      AppState.chantCounts[mid] = (AppState.chantCounts[mid] || 0) + 1;
+      SafeStorage.setItem('zen_mantra_counts', JSON.stringify(AppState.chantCounts));
+      document.getElementById('curMantraCount').textContent = AppState.chantCounts[mid];
+      updateStatsBar();
+      renderHomeLayouts();
+      showToast('持誦計數 +1 遍');
+    }
+
+    function resetCurrentMantraCount() {
+      const mid = AppState.curMantraId;
+      AppState.chantCounts[mid] = 0;
+      SafeStorage.setItem('zen_mantra_counts', JSON.stringify(AppState.chantCounts));
+      document.getElementById('curMantraCount').textContent = 0;
+      updateStatsBar();
+      renderHomeLayouts();
+      showToast('本咒持誦遍數已歸零');
+    }
+
+    /* ==========================================================================
+       默誦核對 (Diff 比對)
+       ========================================================================== */
+    function runDiffVerification() {
+      const mantra = MANTRAS_DATA.find(m => m.id === AppState.curMantraId);
+      if (!mantra) return;
+
+      const inputRaw = document.getElementById('verifyInput').value.trim();
+      if (!inputRaw) {
+        showToast('請先在輸入框默寫經文內容');
+        return;
+      }
+
+      const userClean = inputRaw.replace(/[^\u4e00-\u9fa5]/g, "");
+      const originClean = mantra.plainText;
+
+      const diffResult = computeSimpleDiff(originClean, userClean);
+      const outBox = document.getElementById('diffOutput');
+      outBox.innerHTML = '';
+
+      let correctCount = 0;
+      diffResult.forEach(item => {
+        const span = document.createElement('span');
+        span.className = `diff-char diff-${item.type}`;
+        span.textContent = item.char;
+        if (item.type === 'correct') correctCount++;
+        outBox.appendChild(span);
+      });
+
+      const accuracy = Math.round((correctCount / Math.max(originClean.length, userClean.length)) * 100);
+      document.getElementById('verifyResultBox').style.display = 'block';
+      document.getElementById('verifyScoreBadge').textContent = `背誦正確率：${accuracy}% (${correctCount}/${originClean.length} 字)`;
+      
+      if (accuracy === 100) {
+        showToast('讚歎！一字不漏，背誦完全正確！');
+      } else {
+        showToast(`核對完成，正確率為 ${accuracy}%，請參閱標示加強記憶。`);
+      }
+    }
+
+    function computeSimpleDiff(target, input) {
+      const result = [];
+      let tIdx = 0;
+      let iIdx = 0;
+
+      while (tIdx < target.length || iIdx < input.length) {
+        if (tIdx < target.length && iIdx < input.length) {
+          if (target[tIdx] === input[iIdx]) {
+            result.push({ char: target[tIdx], type: 'correct' });
+            tIdx++;
+            iIdx++;
+          } else {
+            const nextMatchInTarget = target.indexOf(input[iIdx], tIdx);
+            if (nextMatchInTarget !== -1 && nextMatchInTarget - tIdx < 4) {
+              while (tIdx < nextMatchInTarget) {
+                result.push({ char: `[漏: ${target[tIdx]}]`, type: 'missing' });
+                tIdx++;
+              }
+            } else {
+              result.push({ char: input[iIdx], type: 'wrong' });
+              iIdx++;
+            }
+          }
+        } else if (tIdx < target.length) {
+          result.push({ char: `[漏: ${target[tIdx]}]`, type: 'missing' });
+          tIdx++;
+        } else if (iIdx < input.length) {
+          result.push({ char: input[iIdx], type: 'wrong' });
+          iIdx++;
+        }
+      }
+      return result;
+    }
+
+    /* ==========================================================================
+       事件綁定
+       ========================================================================== */
+    function bindEvents() {
+      document.getElementById('brandHomeBtn').addEventListener('click', () => {
+        document.getElementById('practiceView').style.display = 'none';
+        document.getElementById('homeView').style.display = 'block';
+        const quoteBox = document.getElementById('cbetaQuoteCarousel');
+        if (quoteBox) quoteBox.style.display = 'block';
+        AppState.curView = 'home';
+        const topSelect = document.getElementById('headerMantraSelect');
+        if (topSelect) topSelect.value = '';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // 頂部下拉選單快速跳轉咒語
+      const topMantraSelect = document.getElementById('headerMantraSelect');
+      if (topMantraSelect) {
+        topMantraSelect.addEventListener('change', (e) => {
+          const val = e.target.value;
+          if (val) {
+            openPracticeView(parseInt(val, 10));
+          } else {
+            document.getElementById('brandHomeBtn').click();
+          }
+        });
+      }
+
+      document.getElementById('backToHomeBtn').addEventListener('click', () => {
+        document.getElementById('brandHomeBtn').click();
+      });
+
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        applyTheme(AppState.theme === 'stone' ? 'dark' : 'stone');
+      });
+
+      document.querySelectorAll('[data-home-layout]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          setHomeLayout(e.target.getAttribute('data-home-layout'));
+        });
+      });
+
+      document.getElementById('focusPrevBtn').addEventListener('click', () => {
+        carouselIndex = (carouselIndex - 1 + MANTRAS_DATA.length) % MANTRAS_DATA.length;
+        updateCarouselItem();
+      });
+      document.getElementById('focusNextBtn').addEventListener('click', () => {
+        carouselIndex = (carouselIndex + 1) % MANTRAS_DATA.length;
+        updateCarouselItem();
+      });
+      document.getElementById('focusEnterBtn').addEventListener('click', () => {
+        openPracticeView(MANTRAS_DATA[carouselIndex].id);
+      });
+
+      document.querySelectorAll('[data-practice-layout]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const targetBtn = e.currentTarget || e.target.closest('[data-practice-layout]');
+          if (targetBtn) setPracticeLayout(targetBtn.getAttribute('data-practice-layout'));
+        });
+      });
+
+      document.querySelectorAll('.mode-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          const targetTab = e.currentTarget || e.target.closest('.mode-tab');
+          if (targetTab) setPracticeMode(targetTab.getAttribute('data-mode'));
+        });
+      });
+
+      document.getElementById('toggleZh').addEventListener('change', (e) => {
+        AppState.showZh = e.target.checked;
+        document.querySelectorAll('.ruby-bopomofo').forEach(el => {
+          el.style.display = AppState.showZh ? 'block' : 'none';
+        });
+      });
+      document.getElementById('togglePy').addEventListener('change', (e) => {
+        AppState.showPy = e.target.checked;
+        document.querySelectorAll('.ruby-pinyin').forEach(el => {
+          el.style.display = AppState.showPy ? 'block' : 'none';
+        });
+      });
+
+      // 持誦計數事件
+      document.getElementById('incCountBtn').addEventListener('click', incrementMantraCount);
+      document.getElementById('resetCountBtn').addEventListener('click', resetCurrentMantraCount);
+
+      // 自訂讀音面板按鈕
+      document.getElementById('openCustomPronounceBtn').addEventListener('click', openCustomPronounceModal);
+
+      // 校訂面板內部快速切換咒語
+      const customPanelSelect = document.getElementById('customPanelMantraSelect');
+      if (customPanelSelect) {
+        customPanelSelect.addEventListener('change', (e) => {
+          const targetId = parseInt(e.target.value, 10);
+          if (targetId) {
+            openPracticeView(targetId);
+            openCustomPronounceModal();
+          }
+        });
+      }
+      const customPrevBtn = document.getElementById('customPrevMantraBtn');
+      if (customPrevBtn) {
+        customPrevBtn.addEventListener('click', () => {
+          const curId = AppState.curMantraId;
+          const targetId = curId <= 1 ? 10 : curId - 1;
+          openPracticeView(targetId);
+          openCustomPronounceModal();
+        });
+      }
+      const customNextBtn = document.getElementById('customNextMantraBtn');
+      if (customNextBtn) {
+        customNextBtn.addEventListener('click', () => {
+          const curId = AppState.curMantraId;
+          const targetId = curId >= 10 ? 1 : curId + 1;
+          openPracticeView(targetId);
+          openCustomPronounceModal();
+        });
+      }
+      document.getElementById('closeCustomPronounceBtn').addEventListener('click', () => {
+        document.getElementById('customPronouncePanel').style.display = 'none';
+      });
+      document.getElementById('saveCustomPronounceBtn').addEventListener('click', saveCustomPronunciations);
+      document.getElementById('resetCustomPronounceBtn').addEventListener('click', resetCustomPronunciations);
+      const resetAllBtn = document.getElementById('resetAllCustomPronounceBtn');
+      if (resetAllBtn) resetAllBtn.addEventListener('click', resetAllCustomPronunciations);
+      document.getElementById('copyCustomDataBtn').addEventListener('click', copyCustomDataForAI);
+
+      // 字級縮放切換器
+      function applyFontSize(size) {
+        AppState.fontSize = size;
+        document.body.setAttribute('data-font-size', size);
+        SafeStorage.setItem('zen_font_size', size);
+        document.querySelectorAll('.font-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-size') === size);
+        });
+      }
+
+      document.querySelectorAll('.font-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const size = e.currentTarget.getAttribute('data-size');
+          applyFontSize(size);
+          const label = size === 'standard' ? '標準字級' : (size === 'large' ? '大字模式（手機推薦）' : '特大字模式');
+          showToast(`🔤 已切換至：${label}`);
+        });
+      });
+
+      // 背誦遮蔽控制
+      document.querySelectorAll('[data-mask-ratio]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('[data-mask-ratio]').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          AppState.maskRatio = parseFloat(e.target.getAttribute('data-mask-ratio'));
+          renderMantraContent();
+          showToast(`已套用 ${Math.round(AppState.maskRatio * 100)}% 遮蔽模式，點擊字格可翻開提示`);
+        });
+      });
+
+      // 全部顯字（取消遮蔽）
+      document.getElementById('unmaskAllBtn').addEventListener('click', () => {
+        AppState.maskRatio = 0;
+        document.querySelectorAll('[data-mask-ratio]').forEach(b => b.classList.remove('active'));
+        renderMantraContent();
+        showToast('👁️ 已取消遮蔽，顯示全部經文');
+      });
+
+      // 重新蓋上
+      document.getElementById('remaskRevealedBtn').addEventListener('click', () => {
+        const revealedEls = document.querySelectorAll('.word-unit.masked.revealed');
+        revealedEls.forEach(el => el.classList.remove('revealed'));
+        showToast(`🔄 已將 ${revealedEls.length} 個翻開的字重新蓋上遮蔽`);
+      });
+
+      // CBETA 經句輪播模組
+      function renderQuoteCarousel() {
+        const q = CBETA_QUOTES[AppState.quoteIdx];
+        if (!q) return;
+
+        const textEl = document.getElementById('quoteCarouselText');
+        const srcEl = document.getElementById('quoteCarouselSource');
+        const indEl = document.getElementById('quoteIndicator');
+        const linkEl = document.getElementById('quoteCbetaLink');
+        const gotoBtn = document.getElementById('quoteGotoMantraBtn');
+        const dotsEl = document.getElementById('quoteDotsBar');
+
+        if (textEl) {
+          textEl.style.opacity = 0;
+          setTimeout(() => {
+            textEl.textContent = q.text;
+            textEl.style.opacity = 1;
+          }, 150);
+        }
+        if (srcEl) srcEl.textContent = `——${q.source}`;
+        if (indEl) indEl.textContent = `${AppState.quoteIdx + 1} / ${CBETA_QUOTES.length}`;
+        if (linkEl) linkEl.href = q.cbetaUrl;
+        if (gotoBtn) {
+          gotoBtn.textContent = `進入《${q.mantraName}》誦持 ➔`;
+          gotoBtn.onclick = () => {
+            openPracticeView(q.mantraId);
+          };
+        }
+
+        if (dotsEl) {
+          dotsEl.innerHTML = '';
+          CBETA_QUOTES.forEach((item, idx) => {
+            const dot = document.createElement('div');
+            dot.className = 'quote-dot' + (idx === AppState.quoteIdx ? ' active' : '');
+            dot.title = item.mantraName;
+            dot.addEventListener('click', () => {
+              AppState.quoteIdx = idx;
+              renderQuoteCarousel();
+              resetQuoteTimer();
+            });
+            dotsEl.appendChild(dot);
+          });
+        }
+      }
+
+      function nextQuote() {
+        AppState.quoteIdx = (AppState.quoteIdx + 1) % CBETA_QUOTES.length;
+        renderQuoteCarousel();
+      }
+
+      function prevQuote() {
+        AppState.quoteIdx = (AppState.quoteIdx - 1 + CBETA_QUOTES.length) % CBETA_QUOTES.length;
+        renderQuoteCarousel();
+      }
+
+      function startQuoteTimer() {
+        if (AppState.quoteTimer) clearInterval(AppState.quoteTimer);
+        AppState.quoteTimer = setInterval(nextQuote, 6500);
+      }
+
+      function resetQuoteTimer() {
+        startQuoteTimer();
+      }
+
+      const quotePrevBtn = document.getElementById('quotePrevBtn');
+      if (quotePrevBtn) {
+        quotePrevBtn.addEventListener('click', () => {
+          prevQuote();
+          resetQuoteTimer();
+        });
+      }
+      const quoteNextBtn = document.getElementById('quoteNextBtn');
+      if (quoteNextBtn) {
+        quoteNextBtn.addEventListener('click', () => {
+          nextQuote();
+          resetQuoteTimer();
+        });
+      }
+
+      const carouselBox = document.getElementById('cbetaQuoteCarousel');
+      if (carouselBox) {
+        carouselBox.addEventListener('mouseenter', () => {
+          if (AppState.quoteTimer) clearInterval(AppState.quoteTimer);
+        });
+        carouselBox.addEventListener('mouseleave', () => {
+          startQuoteTimer();
+        });
+      }
+
+      // 分句切換
+      document.getElementById('stepPrevBtn').addEventListener('click', () => {
+        const mantra = MANTRAS_DATA.find(m => m.id === AppState.curMantraId);
+        if (!mantra) return;
+        AppState.curSentenceIdx = (AppState.curSentenceIdx - 1 + mantra.lines.length) % mantra.lines.length;
+        renderStepSentence(AppState.curSentenceIdx);
+        highlightSentence(AppState.curSentenceIdx);
+      });
+      document.getElementById('stepNextBtn').addEventListener('click', () => {
+        const mantra = MANTRAS_DATA.find(m => m.id === AppState.curMantraId);
+        if (!mantra) return;
+        AppState.curSentenceIdx = (AppState.curSentenceIdx + 1) % mantra.lines.length;
+        renderStepSentence(AppState.curSentenceIdx);
+        highlightSentence(AppState.curSentenceIdx);
+      });
+
+      // 默誦核對
+      document.getElementById('startVerifyBtn').addEventListener('click', runDiffVerification);
+      document.getElementById('clearVerifyBtn').addEventListener('click', () => {
+        document.getElementById('verifyInput').value = '';
+        document.getElementById('verifyResultBox').style.display = 'none';
+        document.getElementById('verifyScoreBadge').textContent = '';
+      });
+
+      // 關於與 CBETA 典籍校勘說明
+      document.getElementById('aboutBtn').addEventListener('click', () => {
+        const content = `
+          <p><strong>一、 底本依據與原典校勘</strong></p>
+          <p>本工具收錄之漢傳佛教傳統十小咒，所有經文分句、字體、出處經軌均嚴格對齊 <strong>CBETA 中華電子佛典協會</strong> 收錄之《大正新脩大藏經》及《嘉興大藏經》原典：</p>
+          <ul style="margin: 0.5rem 0 1rem 1.25rem; font-size:0.85rem; line-height:1.7;">
+            <li>1. 如意寶輪王陀羅尼：出《如意輪陀羅尼經》（CBETA T1087 唐・菩提流志譯）</li>
+            <li>2. 消災吉祥神咒：出《佛說熾盛光大威德消災吉祥陀羅尼經》（CBETA T0963 唐・不空譯）</li>
+            <li>3. 功德寶山神咒：出《大方等大集經》卷六十（CBETA T0397 北涼・曇無讖譯）</li>
+            <li>4. 準提神咒：出《佛說七俱胝佛母心大準提陀羅尼經》（CBETA T1076 唐・地婆訶羅譯）</li>
+            <li>5. 聖無量壽決定光明王陀羅尼：出《大乘聖無量壽決定光明王如來陀羅尼經》（CBETA T0937 宋・法天譯）</li>
+            <li>6. 藥師灌頂真言：出《藥師琉璃光如來本願功德經》（CBETA T0928 唐・玄奘譯）</li>
+            <li>7. 觀音靈感真言：出《諸經日誦集要》（CBETA J1069）</li>
+            <li>8. 七佛滅罪真言：出《大方等陀羅尼經》卷四（CBETA T1339 北涼・法眾譯）</li>
+            <li>9. 拔一切業障根本得生淨土陀羅尼（往生咒）：出《拔一切業障根本得生淨土神咒》（CBETA T0368 劉宋・求那跋陀羅譯）</li>
+            <li>10. 大吉祥天女咒：出《金光明最勝王經》卷八（CBETA T0665 唐・義淨譯）</li>
+          </ul>
+
+          <p><strong>二、 經意與辭典參考</strong></p>
+          <p>經文之持誦功德與經意釋義，參照佛光山出版、慈怡法師主編之《佛光大辭典》，以及印順導師收錄於 CBETA 之著作（如《華雨集》、《藥師經講記》、《淨土與禪》）。</p>
+          <br>
+          <p><strong>三、 梵漢音標與自訂校正</strong></p>
+          <p>真言陀羅尼於漢傳各道場傳承音讀略有不同，除預設標注寺院通用之教育部注音與通用拼音外，工具內建<strong>「✏️ 校正讀音」</strong>功能，行者可依個人或常住傳承隨時調整每個字的注音與拼音，系統將自動保存在瀏覽器中；若希望將修正版本更新至官方底本，亦可直接點擊「複製修改資料」提供給開發者更新。</p>
+        `;
+        showModal("CBETA 大藏經底本與校勘說明", content);
+      });
+
+      document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+      document.getElementById('zenModalOverlay').addEventListener('click', (e) => {
+        if (e.target.id === 'zenModalOverlay') closeModal();
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+        if (e.code === 'ArrowRight') {
+          if (AppState.curView === 'practice') {
+            document.getElementById('stepNextBtn').click();
+          }
+        } else if (e.code === 'ArrowLeft') {
+          if (AppState.curView === 'practice') {
+            document.getElementById('stepPrevBtn').click();
+          }
+        }
+      });
+
+      // 初始化字級與輪播
+      const savedFontSize = SafeStorage.getItem('zen_font_size') || 'large';
+      applyFontSize(savedFontSize);
+      renderQuoteCarousel();
+      startQuoteTimer();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedState();
+      loadCustomPronunciations();
+      renderHomeLayouts();
+      bindEvents();
+      renderStats();
+    });
+  </script>
+</body>
+</html>
