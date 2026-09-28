@@ -2277,13 +2277,10 @@
       </select>
 
       <div class="header-actions">
-        <!-- 字級縮放切換（共 5 級：微小 / 小 / 標準 / 大 / 特大） -->
-        <div class="font-size-switcher" title="調節經文字級大小（共五級階梯）">
-          <button class="font-btn" data-size="xsmall" title="極小字級（A-- 緊湊微字）">A--</button>
-          <button class="font-btn" data-size="small" title="小字級（A- 精簡版面）">A-</button>
-          <button class="font-btn" data-size="standard" title="標準字級（A 平衡閱讀）">A</button>
-          <button class="font-btn active" data-size="large" title="大字模式（A+ 推薦手機）">A+</button>
-          <button class="font-btn" data-size="xlarge" title="特大字模式（A++ 沉浸大字）">A++</button>
+        <!-- 字級縮放調節（精簡 A- / A+ 兩鍵） -->
+        <div class="font-size-switcher" title="調節經文字級大小">
+          <button class="font-btn" id="fontDecBtn" title="縮小字級 (A-)">A-</button>
+          <button class="font-btn" id="fontIncBtn" title="放大字級 (A+)">A+</button>
         </div>
 
         <!-- 主題切換 (暖沙禪石 / 曜石古茶) -->
@@ -2315,32 +2312,6 @@
          視圖 A：首頁總覽 (3 種佈局切換，內含專屬法語輪播與儀表板)
          ==================================================================== -->
     <section id="homeView">
-
-      <!-- 經典甘露・十小咒 CBETA 原典法語輪播 (首頁專屬) -->
-      <div class="zen-quote-carousel" id="cbetaQuoteCarousel">
-        <div class="quote-carousel-header">
-          <div class="quote-carousel-badge">
-            <span>✨</span> 經典甘露・十小咒 CBETA 原典法語
-          </div>
-          <div class="quote-carousel-controls">
-            <button class="quote-nav-btn" id="quotePrevBtn" title="上一句">◄</button>
-            <span class="quote-nav-indicator" id="quoteIndicator">1 / 10</span>
-            <button class="quote-nav-btn" id="quoteNextBtn" title="下一句">►</button>
-            <button class="quote-nav-btn" id="quoteToggleCollapseBtn" title="收合或展開甘露橫幅">收合 ▲</button>
-          </div>
-        </div>
-        <div class="quote-carousel-body">
-          <div class="quote-carousel-text" id="quoteCarouselText">「若有受持讀誦此陀羅尼者，能滅五逆無間重罪，一切病苦悉皆消滅，求富貴智慧悉得相應。」</div>
-          <div class="quote-carousel-meta">
-            <div class="quote-carousel-source" id="quoteCarouselSource">——《如意輪陀羅尼經》（CBETA T20, no. 1087，唐・菩提流志譯）</div>
-            <div class="quote-carousel-actions">
-              <button class="btn-goto-mantra" id="quoteGotoMantraBtn">進入此咒誦持 ➔</button>
-              <a class="btn-cbeta-link" id="quoteCbetaLink" target="_blank" rel="noopener noreferrer">CBETA 原典 ↗</a>
-            </div>
-          </div>
-        </div>
-        <div class="quote-dots-bar" id="quoteDotsBar"></div>
-      </div>
 
       <!-- 儀表板 (首頁專屬) -->
       <div class="zen-stats-bar">
@@ -8890,31 +8861,44 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
       if (resetAllBtn) resetAllBtn.addEventListener('click', resetAllCustomPronunciations);
       document.getElementById('copyCustomDataBtn').addEventListener('click', copyCustomDataForAI);
 
-      // 字級縮放切換器（共 5 級階梯）
+      // 字級縮放調節器（A- 縮小 / A+ 放大，共 5 級階梯平滑切換）
+      const fontSteps = ['xsmall', 'small', 'standard', 'large', 'xlarge'];
+      const fontLabelMap = {
+        'xsmall': '極小字級（A--）',
+        'small': '小字級（A-）',
+        'standard': '標準字級（A）',
+        'large': '大字模式（A+ 推薦手機）',
+        'xlarge': '特大字模式（A++ 沉浸大字）'
+      };
+
       function applyFontSize(size) {
+        if (!fontSteps.includes(size)) size = 'large';
         AppState.fontSize = size;
         document.body.setAttribute('data-font-size', size);
         SafeStorage.setItem('zen_font_size', size);
-        document.querySelectorAll('.font-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.getAttribute('data-size') === size);
-        });
       }
 
-      document.querySelectorAll('.font-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const size = e.currentTarget.getAttribute('data-size');
-          applyFontSize(size);
-          const labelMap = {
-            'xsmall': '極小字級 A--（微字全覽）',
-            'small': '小字級 A-（精簡版面）',
-            'standard': '標準字級 A（平衡適中）',
-            'large': '大字模式 A+（推薦手機）',
-            'xlarge': '特大字模式 A++（沉浸大字）'
-          };
-          const label = labelMap[size] || size;
-          showToast(`🔤 已切換至：${label}`);
-        });
-      });
+      function changeFontSizeStep(delta) {
+        let curIdx = fontSteps.indexOf(AppState.fontSize);
+        if (curIdx === -1) curIdx = 3; // 預設 large
+        let newIdx = curIdx + delta;
+        if (newIdx < 0) {
+          showToast('已達最小字級');
+          return;
+        }
+        if (newIdx >= fontSteps.length) {
+          showToast('已達最大字級');
+          return;
+        }
+        const newSize = fontSteps[newIdx];
+        applyFontSize(newSize);
+        showToast(`🔤 字級已調整為：${fontLabelMap[newSize]}`);
+      }
+
+      const fontDecBtn = document.getElementById('fontDecBtn');
+      if (fontDecBtn) fontDecBtn.addEventListener('click', () => changeFontSizeStep(-1));
+      const fontIncBtn = document.getElementById('fontIncBtn');
+      if (fontIncBtn) fontIncBtn.addEventListener('click', () => changeFontSizeStep(1));
 
       // 背誦遮蔽控制
       document.querySelectorAll('[data-mask-ratio]').forEach(btn => {
@@ -9121,8 +9105,9 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
           <p><strong>二、 經意與辭典參考</strong></p>
           <p>經文之持誦功德與經意釋義，參照佛光山出版、慈怡法師主編之《佛光大辭典》，以及印順導師收錄於 CBETA 之著作（如《華雨集》、《藥師經講記》、《淨土與禪》）。</p>
           <br>
-          <p><strong>三、 梵漢音標與自訂校正</strong></p>
-          <p>真言陀羅尼於漢傳各道場傳承音讀略有不同，除預設標注寺院通用之教育部注音與通用拼音外，工具內建<strong>「✏️ 校正讀音」</strong>功能，行者可依個人或常住傳承隨時調整每個字的注音與拼音，系統將自動保存在瀏覽器中；若希望將修正版本更新至官方底本，亦可直接點擊「複製修改資料」提供給開發者更新。</p>
+          <p><strong>三、 語音唱誦與自訂校正</strong></p>
+          <p>• <strong>修正語音採用</strong>：本系統早課音訊採用<strong>法鼓山僧團早課唱誦原音</strong>，經文注音與通用拼音依佛門課誦本嚴謹校勘。</p>
+          <p>• <strong>若因版本不同請自行校正讀音</strong>：真言陀羅尼於漢傳各道場傳承與版本音讀略有不同，工具內建<strong>「✏️ 校訂字音／國字」</strong>功能，行者可依個人或常住傳承隨時調整每個字的國字、注音符號與拼音，系統將自動保存在瀏覽器安全快取中；亦可直接點擊「複製修改資料」提供給開發者更新至全站。</p>
         `;
         showModal("CBETA 大藏經底本與校勘說明", content);
       });
