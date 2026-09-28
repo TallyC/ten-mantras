@@ -2419,14 +2419,12 @@
             <span class="fanbai-vol-icon">🔊</span>
             <input type="range" class="fanbai-vol-bar" id="audioVolumeBar" min="0" max="1" step="0.05" value="1">
           </div>
-          <!-- 隨誦播放速度調節 (0.25倍、0.5倍、0.75倍、1倍) -->
+          <!-- 隨誦播放速度調節 (保留音質自然清淨之 1倍、0.75倍，移除失真電子音) -->
           <div class="fanbai-speed-wrap" title="隨誦速度調節">
             <span class="fanbai-speed-icon">⚡</span>
             <select id="audioSpeedSelect" class="fanbai-speed-select" title="調節隨誦播放速度">
               <option value="1">1倍</option>
               <option value="0.75">0.75倍</option>
-              <option value="0.5">0.5倍</option>
-              <option value="0.25">0.25倍</option>
             </select>
           </div>
           <span class="fanbai-time-tag" id="audioTimeCurrent">00:00</span>
@@ -7968,12 +7966,21 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
           });
         }
 
-        // 讀取速度設定並綁定事件
+        // 讀取速度設定並綁定事件 (只保留音質自然之 1倍 與 0.75倍)
+        try {
+          this.audio.preservesPitch = true;
+          if ('webkitPreservesPitch' in this.audio) this.audio.webkitPreservesPitch = true;
+          if ('mozPreservesPitch' in this.audio) this.audio.mozPreservesPitch = true;
+        } catch (e) {}
+
         const savedSpeed = SafeStorage.getItem('zen_audio_speed');
         if (savedSpeed) {
           const sp = parseFloat(savedSpeed);
-          if ([0.25, 0.5, 0.75, 1].includes(sp)) {
+          if ([0.75, 1].includes(sp)) {
             this.playbackRate = sp;
+          } else {
+            this.playbackRate = 1;
+            SafeStorage.setItem('zen_audio_speed', '1');
           }
         }
         const speedSelect = document.getElementById('audioSpeedSelect');
