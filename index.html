@@ -859,10 +859,23 @@
     .mantra-sentence-block:hover {
       background-color: var(--bg-card-subtle);
     }
+    .mantra-sentence-block {
+      transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+      border-radius: 8px;
+      padding: 0.4rem 0.6rem;
+      margin-bottom: 0.4rem;
+      border-left: 4px solid transparent;
+    }
     .mantra-sentence-block.speaking-active {
       background-color: var(--accent-gold-light);
-      border-left: 3px solid var(--accent-gold);
+      border-left: 4px solid var(--accent-gold);
+      box-shadow: 0 4px 16px rgba(155, 120, 62, 0.16);
       transform: translateX(4px);
+    }
+    [data-theme="dark"] .mantra-sentence-block.speaking-active {
+      background-color: rgba(200, 168, 123, 0.14);
+      border-left: 4px solid var(--accent-gold);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
     }
 
     .word-spacer {
@@ -7305,7 +7318,9 @@ if (typeof module !== 'undefined' && module.exports) {
     };
 
     // 十小咒 CBETA 大藏經原典名句精選集（精確引用佛典）
-    const CBETA_QUOTES = [
+    const MANTRA_LINE_TIMESTAMPS = {"1": [{"idx": 0, "start": 0, "end": 3.64, "text": "南無佛馱耶 南無達摩耶 南無僧伽耶"}, {"idx": 1, "start": 3.64, "end": 7.28, "text": "南無觀自在菩薩摩訶薩 具大悲心者"}, {"idx": 2, "start": 7.28, "end": 10.93, "text": "怛姪他 唵 斫羯囉伐底 震多末尼 摩訶"}, {"idx": 3, "start": 10.93, "end": 14.57, "text": "鉢蹬謎 嚕嚕嚕嚕 底瑟吒 篅囉阿羯利"}, {"idx": 4, "start": 14.57, "end": 16.19, "text": "沙夜吽 癹莎訶"}, {"idx": 5, "start": 16.19, "end": 18.93, "text": "唵 鉢蹋摩 震多末尼 篅囉吽"}, {"idx": 6, "start": 18.93, "end": 21, "text": "唵 跋喇陀 鉢亶謎吽"}], "2": [{"idx": 0, "start": 0, "end": 5.42, "text": "曩謨三滿哆 母馱喃 阿鉢囉底 賀多舍 娑曩喃 怛姪他"}, {"idx": 1, "start": 5.42, "end": 9.38, "text": "唵 佉佉 佉呬 佉呬 吽吽 入嚩囉 入嚩囉"}, {"idx": 2, "start": 9.38, "end": 14.31, "text": "鉢囉入嚩囉 鉢囉入嚩囉 底瑟姹 底瑟姹 瑟致哩"}, {"idx": 3, "start": 14.31, "end": 19, "text": "瑟致哩 娑癹吒 娑癹吒 扇底迦 室哩曳 娑嚩訶"}], "3": [{"idx": 0, "start": 0, "end": 3.42, "text": "南無佛馱耶 南無達摩耶 南無僧伽耶"}, {"idx": 1, "start": 3.42, "end": 6.21, "text": "唵 悉帝護嚕嚕 悉都嚕 只利波"}, {"idx": 2, "start": 6.21, "end": 9, "text": "吉利婆 悉達哩 布嚕哩 娑嚩訶"}], "4": [{"idx": 0, "start": 0, "end": 3.36, "text": "稽首歸依蘇悉帝 頭面頂禮七俱胝"}, {"idx": 1, "start": 3.36, "end": 6.72, "text": "我今稱讚大準提 惟願慈悲垂加護"}, {"idx": 2, "start": 6.72, "end": 10.52, "text": "南無颯哆喃 三藐三菩陀 俱胝喃 怛姪他"}, {"idx": 3, "start": 10.52, "end": 13, "text": "唵 折戾 主戾 準提娑婆訶"}], "5": [{"idx": 0, "start": 0, "end": 5.54, "text": "唵 捺摩巴葛瓦帝 阿巴囉密沓 阿優哩阿納 蘇必你 實執沓"}, {"idx": 1, "start": 5.54, "end": 11.3, "text": "牒左囉宰也 怛塔哿達也 阿囉訶帝 三藥三不達也 怛你也塔"}, {"idx": 2, "start": 11.3, "end": 17.07, "text": "唵 薩哩巴 桑斯葛哩 叭哩述沓 達囉馬帝 哿哿捺 桑馬兀哿帝"}, {"idx": 3, "start": 17.07, "end": 21, "text": "莎巴瓦 比述帝 馬喝捺也 叭哩瓦哩娑訶"}], "6": [{"idx": 0, "start": 0, "end": 4.92, "text": "曩謨薄伽伐帝 鞞殺社 窶嚕薜琉璃 鉢喇婆 喝囉闍也"}, {"idx": 1, "start": 4.92, "end": 9.18, "text": "怛他揭多也 阿囉喝帝 三藐三勃陀耶 怛姪他"}, {"idx": 2, "start": 9.18, "end": 13, "text": "唵 鞞殺逝 鞞殺逝 鞞殺社 三沒揭帝 娑訶"}], "7": [{"idx": 0, "start": 0, "end": 3.58, "text": "唵 嘛呢叭彌吽 麻曷倪牙納 積都特巴達"}, {"idx": 1, "start": 3.58, "end": 7.58, "text": "積特些納 微達哩葛 薩而斡而塔 卜哩悉塔葛"}, {"idx": 2, "start": 7.58, "end": 12, "text": "納補囉納 納卜哩 丟忒班納 㖠麻嚧吉 說囉耶娑訶"}], "8": [{"idx": 0, "start": 0, "end": 3.86, "text": "離婆離婆帝 求訶求訶帝 陀羅尼帝"}, {"idx": 1, "start": 3.86, "end": 9, "text": "尼訶囉帝 毗黎你帝 摩訶伽帝 真陵乾帝 娑婆訶"}], "9": [{"idx": 0, "start": 0, "end": 3.57, "text": "南無阿彌多婆夜 哆他伽多夜 哆地夜他"}, {"idx": 1, "start": 3.57, "end": 8.39, "text": "阿彌利都婆毗 阿彌利哆 悉耽婆毗 阿彌唎哆 毗迦蘭帝"}, {"idx": 2, "start": 8.39, "end": 13, "text": "阿彌唎哆 毗迦蘭多 伽彌膩 伽伽那 枳多迦利 娑婆訶"}], "10": [{"idx": 0, "start": 0, "end": 3.7, "text": "南無佛陀 南無達摩 南無僧伽 南無室利"}, {"idx": 1, "start": 3.7, "end": 8.05, "text": "摩訶提鼻耶 怛你也他 波利富樓那 遮利三曼陀"}, {"idx": 2, "start": 8.05, "end": 13.05, "text": "達舍尼 摩訶毗訶羅伽帝 三曼陀 毗尼伽帝 摩訶迦利野"}, {"idx": 3, "start": 13.05, "end": 16.32, "text": "波禰 波囉 波禰 薩利嚩栗他 三曼陀"}, {"idx": 4, "start": 16.32, "end": 19.38, "text": "修鉢犁帝 富隸那 阿利那 達摩帝"}, {"idx": 5, "start": 19.38, "end": 23.08, "text": "摩訶毗鼓畢帝 摩訶彌勒帝 婁簸僧祗帝"}, {"idx": 6, "start": 23.08, "end": 27, "text": "醯帝簁僧祗醯帝 三曼陀 阿他阿㝹婆羅尼"}]};
+
+const CBETA_QUOTES = [
       {
         id: 1,
         mantraId: 1,
@@ -7919,6 +7934,7 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
 
         this.audio.addEventListener('timeupdate', () => {
           this.updateTimeDisplay();
+          this.syncLyricsWithAudio();
         });
 
         this.audio.addEventListener('play', () => {
@@ -8158,6 +8174,26 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
         }
       },
 
+      syncLyricsWithAudio() {
+        if (!this.isPlaying || !AppState.curMantraId) return;
+        const curTime = this.audio.currentTime || 0;
+        const tsList = (typeof MANTRA_LINE_TIMESTAMPS !== 'undefined') ? MANTRA_LINE_TIMESTAMPS[AppState.curMantraId] : null;
+        if (!tsList || !tsList.length) return;
+
+        let foundIdx = 0;
+        for (let i = 0; i < tsList.length; i++) {
+          if (curTime >= tsList[i].start) {
+            foundIdx = i;
+          } else {
+            break;
+          }
+        }
+
+        if (foundIdx !== AppState.curSentenceIdx) {
+          selectSentence(foundIdx, true);
+        }
+      },
+
       setSpeed(rate) {
         this.playbackRate = rate;
         try {
@@ -8189,6 +8225,10 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
         try {
           if (!this.audio.src || this.curMantraId !== AppState.curMantraId) {
             this.setMantra(AppState.curMantraId, false);
+          }
+          // 當音檔唱誦時，自動以全文持誦版本進行對齊
+          if (AppState.practiceLayout !== 'full') {
+            setPracticeLayout('full');
           }
           try {
             this.audio.playbackRate = this.playbackRate;
@@ -8442,9 +8482,17 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
         const sBlock = document.createElement('div');
         sBlock.className = 'mantra-sentence-block';
         sBlock.dataset.sentenceIdx = sIdx;
-        sBlock.title = '點擊聚焦當前句';
+        sBlock.title = '點擊聚焦當前句並定位音訊';
         sBlock.addEventListener('click', () => {
           selectSentence(sIdx, false);
+          if (typeof ChantAudioPlayer !== 'undefined' && ChantAudioPlayer.audio && ChantAudioPlayer.audio.duration) {
+            const tsList = (typeof MANTRA_LINE_TIMESTAMPS !== 'undefined') ? MANTRA_LINE_TIMESTAMPS[AppState.curMantraId] : null;
+            if (tsList && tsList[sIdx]) {
+              try {
+                ChantAudioPlayer.audio.currentTime = tsList[sIdx].start;
+              } catch (e) {}
+            }
+          }
         });
 
         line.words.forEach((w, wIdx) => {
@@ -8465,9 +8513,17 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
         const sBlock = document.createElement('div');
         sBlock.className = 'mantra-sentence-block';
         sBlock.dataset.sentenceIdx = sIdx;
-        sBlock.title = '點擊聚焦當前句';
+        sBlock.title = '點擊聚焦當前句並定位音訊';
         sBlock.addEventListener('click', () => {
           selectSentence(sIdx, false);
+          if (typeof ChantAudioPlayer !== 'undefined' && ChantAudioPlayer.audio && ChantAudioPlayer.audio.duration) {
+            const tsList = (typeof MANTRA_LINE_TIMESTAMPS !== 'undefined') ? MANTRA_LINE_TIMESTAMPS[AppState.curMantraId] : null;
+            if (tsList && tsList[sIdx]) {
+              try {
+                ChantAudioPlayer.audio.currentTime = tsList[sIdx].start;
+              } catch (e) {}
+            }
+          }
         });
 
         line.words.forEach((w, wIdx) => {
