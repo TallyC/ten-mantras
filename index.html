@@ -1443,6 +1443,215 @@
     }
 
     /* 全局經句切換導覽條 (適用一般誦讀/全文/分句/義理) */
+    
+    /* ==========================================================================
+       法鼓山早課僧團 十小咒原音隨誦音訊播放台
+       ========================================================================== */
+    .chant-audio-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 12px;
+      padding: 0.85rem 1.15rem;
+      margin-bottom: 0.95rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      transition: var(--transition);
+    }
+    .audio-main-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .audio-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .audio-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: rgba(184, 58, 34, 0.1);
+      color: var(--accent-red);
+      border: 1px solid rgba(184, 58, 34, 0.25);
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+    }
+    [data-theme="dark"] .audio-badge {
+      background: rgba(248, 113, 113, 0.15);
+      border-color: rgba(248, 113, 113, 0.35);
+      color: #f87171;
+    }
+    .audio-mantra-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      font-family: var(--font-serif);
+    }
+    .audio-ctrl-btns {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .audio-btn-play {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, #b4853e 100%);
+      color: #1a1612;
+      border: none;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 2px 8px rgba(155, 120, 62, 0.35);
+      transition: var(--transition);
+      font-family: var(--font-serif);
+    }
+    .audio-btn-play:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .audio-btn-play.playing {
+      background: linear-gradient(135deg, #047857 0%, #059669 100%);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(4, 120, 87, 0.4);
+    }
+    .audio-btn-stop {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-main);
+      color: var(--text-sub);
+      padding: 0.45rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: var(--transition);
+    }
+    .audio-btn-stop:hover {
+      background: var(--bg-active);
+      color: var(--text-main);
+    }
+    .audio-loop-settings {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .audio-setting-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .audio-mode-select {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-main);
+      color: var(--text-main);
+      border-radius: 6px;
+      padding: 0.35rem 0.6rem;
+      font-size: 0.8rem;
+      font-family: var(--font-serif);
+      outline: none;
+      cursor: pointer;
+    }
+    .audio-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .audio-time-current, .audio-time-total {
+      font-size: 0.78rem;
+      font-family: var(--font-sans);
+      color: var(--text-muted);
+      min-width: 38px;
+    }
+    .audio-time-current {
+      text-align: right;
+    }
+    .audio-slider-wrap {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .audio-progress-bar {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--bg-active);
+      outline: none;
+      cursor: pointer;
+    }
+    .audio-progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      border: 2px solid var(--bg-card);
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
+    }
+    .audio-progress-bar::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+    .audio-volume-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding-left: 0.5rem;
+      border-left: 1px solid var(--border-main);
+    }
+    .audio-vol-icon {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .audio-volume-bar {
+      width: 60px;
+      height: 5px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--bg-active);
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+    .audio-volume-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--text-sub);
+      cursor: pointer;
+    }
+    .audio-status-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-top: 1px dashed var(--border-main);
+      padding-top: 0.45rem;
+    }
+    .audio-loop-counter {
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
     .sentence-nav-bar {
       display: flex;
       align-items: center;
@@ -1648,7 +1857,216 @@
         gap: 0.35rem;
         font-size: 0.74rem;
       }
-      .sentence-nav-bar {
+      
+    /* ==========================================================================
+       法鼓山早課僧團 十小咒原音隨誦音訊播放台
+       ========================================================================== */
+    .chant-audio-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 12px;
+      padding: 0.85rem 1.15rem;
+      margin-bottom: 0.95rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      transition: var(--transition);
+    }
+    .audio-main-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .audio-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .audio-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: rgba(184, 58, 34, 0.1);
+      color: var(--accent-red);
+      border: 1px solid rgba(184, 58, 34, 0.25);
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+    }
+    [data-theme="dark"] .audio-badge {
+      background: rgba(248, 113, 113, 0.15);
+      border-color: rgba(248, 113, 113, 0.35);
+      color: #f87171;
+    }
+    .audio-mantra-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      font-family: var(--font-serif);
+    }
+    .audio-ctrl-btns {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .audio-btn-play {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, #b4853e 100%);
+      color: #1a1612;
+      border: none;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 2px 8px rgba(155, 120, 62, 0.35);
+      transition: var(--transition);
+      font-family: var(--font-serif);
+    }
+    .audio-btn-play:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .audio-btn-play.playing {
+      background: linear-gradient(135deg, #047857 0%, #059669 100%);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(4, 120, 87, 0.4);
+    }
+    .audio-btn-stop {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-main);
+      color: var(--text-sub);
+      padding: 0.45rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: var(--transition);
+    }
+    .audio-btn-stop:hover {
+      background: var(--bg-active);
+      color: var(--text-main);
+    }
+    .audio-loop-settings {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .audio-setting-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .audio-mode-select {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-main);
+      color: var(--text-main);
+      border-radius: 6px;
+      padding: 0.35rem 0.6rem;
+      font-size: 0.8rem;
+      font-family: var(--font-serif);
+      outline: none;
+      cursor: pointer;
+    }
+    .audio-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .audio-time-current, .audio-time-total {
+      font-size: 0.78rem;
+      font-family: var(--font-sans);
+      color: var(--text-muted);
+      min-width: 38px;
+    }
+    .audio-time-current {
+      text-align: right;
+    }
+    .audio-slider-wrap {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .audio-progress-bar {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--bg-active);
+      outline: none;
+      cursor: pointer;
+    }
+    .audio-progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      border: 2px solid var(--bg-card);
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
+    }
+    .audio-progress-bar::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+    .audio-volume-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding-left: 0.5rem;
+      border-left: 1px solid var(--border-main);
+    }
+    .audio-vol-icon {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .audio-volume-bar {
+      width: 60px;
+      height: 5px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--bg-active);
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+    .audio-volume-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--text-sub);
+      cursor: pointer;
+    }
+    .audio-status-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-top: 1px dashed var(--border-main);
+      padding-top: 0.45rem;
+    }
+    .audio-loop-counter {
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    .sentence-nav-bar {
         padding: 0.25rem 0.45rem;
         margin-bottom: 0.45rem;
       }
@@ -1715,7 +2133,7 @@
         <div class="zen-emblem">十</div>
         <div class="brand-title">
           <span class="brand-name">十小咒</span><span class="brand-sub">互動誦持</span>
-          <span class="badge-v">v2.1</span>
+          <span class="badge-v">v2.2</span>
         </div>
       </div>
 
@@ -1866,6 +2284,62 @@
           <span class="sentence-step-badge" id="sentenceStepBadge">第 1 / 10 咒</span>
           <span class="sentence-text-preview" id="sentenceTextPreview">如意寶輪王陀羅尼 ‧ 消滅重罪・得大智慧</span>
         </div>
+
+      <!-- 法鼓山早課僧團 隨誦音訊播放台 -->
+      <div class="chant-audio-card" id="chantAudioCard">
+        <div class="audio-main-row">
+          <div class="audio-badge-group">
+            <span class="audio-badge">🎙️ 法鼓山早課原音</span>
+            <span class="audio-mantra-title" id="audioMantraTitle">如意寶輪王陀羅尼</span>
+          </div>
+
+          <!-- 播放控制按鈕組 -->
+          <div class="audio-ctrl-btns">
+            <button class="audio-btn-play" id="audioPlayToggleBtn" title="播放 / 暫停隨誦音訊 (快捷鍵: 空白鍵 Space)">
+              <span id="audioPlayIcon">▶</span>
+              <span id="audioPlayText">隨誦聆聽</span>
+            </button>
+            <button class="audio-btn-stop" id="audioStopBtn" title="停止播放並重設至起點">⏹ 停止</button>
+          </div>
+
+          <!-- 循環模式與遍數連播設定 -->
+          <div class="audio-loop-settings">
+            <span class="audio-setting-label">隨誦模式：</span>
+            <select id="audioLoopModeSelect" class="audio-mode-select" title="設定循環播放或指定遍數">
+              <option value="single">單遍隨誦（播完停止）</option>
+              <option value="loop">無窮循環（連續持誦）</option>
+              <option value="3">定課 3 遍</option>
+              <option value="7">定課 7 遍</option>
+              <option value="21">定課 21 遍</option>
+              <option value="108">定課 108 遍</option>
+              <option value="chain">十小咒整套連播（順序接續下一咒）</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 音訊進度條與時間顯示 -->
+        <div class="audio-progress-row">
+          <span class="audio-time-current" id="audioTimeCurrent">00:00</span>
+          <div class="audio-slider-wrap">
+            <input type="range" class="audio-progress-bar" id="audioProgressBar" min="0" max="100" value="0" step="0.1">
+          </div>
+          <span class="audio-time-total" id="audioTimeTotal">00:21</span>
+          <!-- 音量控制 -->
+          <div class="audio-volume-wrap" title="音量調節">
+            <span class="audio-vol-icon">🔊</span>
+            <input type="range" class="audio-volume-bar" id="audioVolumeBar" min="0" max="1" step="0.05" value="1">
+          </div>
+        </div>
+
+        <!-- 播放狀態提示與隨誦遍數累計 -->
+        <div class="audio-status-footer">
+          <div class="audio-status-msg" id="audioStatusMsg">跟隨法鼓山僧團梵唄韻律持誦，每播完一遍自動為您累計「持誦遍數 +1」。</div>
+          <div class="audio-loop-counter" id="audioLoopCounterBox" style="display:none;">
+            本輪已唱誦：<strong id="audioLoopCurCount">0</strong> / <span id="audioLoopTargetCount">3</span> 遍
+          </div>
+        </div>
+      </div>
+
         <button class="sentence-nav-btn" id="sentenceNextBtn" title="切換至下一個咒語 (快捷鍵: ] 或 Alt+→)">
           <span class="nav-text">下一個咒語</span> <span class="nav-arrow">►</span>
         </button>
@@ -7214,6 +7688,298 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
       document.getElementById('homeLayoutCarousel').style.display = layout === 'carousel' ? 'block' : 'none';
     }
 
+
+    /* ==========================================================================
+       法鼓山早課僧團 十小咒原音隨誦音訊播放器
+       ========================================================================== */
+    const ChantAudioPlayer = {
+      audio: new Audio(),
+      curMantraId: null,
+      isPlaying: false,
+      loopMode: 'single', // 'single' | 'loop' | '3' | '7' | '21' | '108' | 'chain'
+      loopCurCount: 0,
+
+      init() {
+        this.audio.preload = 'metadata';
+
+        // 綁定音訊事件 (全加防禦防護)
+        this.audio.addEventListener('loadedmetadata', () => {
+          this.updateTimeDisplay();
+        });
+
+        this.audio.addEventListener('timeupdate', () => {
+          this.updateProgress();
+        });
+
+        this.audio.addEventListener('play', () => {
+          this.isPlaying = true;
+          this.updateBtnUI();
+        });
+
+        this.audio.addEventListener('pause', () => {
+          this.isPlaying = false;
+          this.updateBtnUI();
+        });
+
+        this.audio.addEventListener('ended', () => {
+          this.handleEnded();
+        });
+
+        this.audio.addEventListener('error', (e) => {
+          console.warn('音訊載入或播放異常:', e);
+          this.isPlaying = false;
+          this.updateBtnUI();
+          const statusMsg = document.getElementById('audioStatusMsg');
+          if (statusMsg) statusMsg.textContent = '提示：若在本地 file:// 瀏覽器阻擋音訊讀取，請使用網頁伺服器或線上版本。';
+        });
+
+        // 綁定 UI 元素
+        const playBtn = document.getElementById('audioPlayToggleBtn');
+        if (playBtn) {
+          playBtn.addEventListener('click', () => this.togglePlay());
+        }
+
+        const stopBtn = document.getElementById('audioStopBtn');
+        if (stopBtn) {
+          stopBtn.addEventListener('click', () => this.stop());
+        }
+
+        const modeSelect = document.getElementById('audioLoopModeSelect');
+        if (modeSelect) {
+          const savedMode = SafeStorage.getItem('zen_audio_loop_mode') || 'single';
+          modeSelect.value = savedMode;
+          this.loopMode = savedMode;
+
+          modeSelect.addEventListener('change', (e) => {
+            this.loopMode = e.target.value;
+            this.loopCurCount = 0;
+            SafeStorage.setItem('zen_audio_loop_mode', this.loopMode);
+            this.updateLoopUI();
+          });
+        }
+
+        const progressBar = document.getElementById('audioProgressBar');
+        if (progressBar) {
+          progressBar.addEventListener('input', (e) => {
+            if (this.audio.duration) {
+              const targetTime = (parseFloat(e.target.value) / 100) * this.audio.duration;
+              try {
+                this.audio.currentTime = targetTime;
+              } catch (err) {
+                console.warn(err);
+              }
+            }
+          });
+        }
+
+        const volBar = document.getElementById('audioVolumeBar');
+        if (volBar) {
+          const savedVol = SafeStorage.getItem('zen_audio_vol');
+          if (savedVol !== null) {
+            this.audio.volume = parseFloat(savedVol);
+            volBar.value = savedVol;
+          }
+          volBar.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            this.audio.volume = v;
+            SafeStorage.setItem('zen_audio_vol', v.toString());
+          });
+        }
+      },
+
+      setMantra(mantraId, autoPlay = false) {
+        if (this.curMantraId === mantraId && this.audio.src) {
+          if (autoPlay && !this.isPlaying) this.play();
+          return;
+        }
+
+        const wasPlaying = this.isPlaying;
+        try {
+          this.audio.pause();
+        } catch (e) {}
+
+        this.curMantraId = mantraId;
+        this.loopCurCount = 0;
+        this.audio.src = `audio/${mantraId}.mp3`;
+        this.audio.load();
+
+        const mantra = MANTRAS_DATA.find(m => m.id === mantraId);
+        const titleEl = document.getElementById('audioMantraTitle');
+        if (titleEl && mantra) {
+          titleEl.textContent = `${mantra.name}`;
+        }
+
+        this.updateBtnUI();
+        this.updateLoopUI();
+        this.updateTimeDisplay();
+
+        if (autoPlay || wasPlaying) {
+          this.play();
+        }
+      },
+
+      togglePlay() {
+        if (this.isPlaying) {
+          this.pause();
+        } else {
+          this.play();
+        }
+      },
+
+      play() {
+        try {
+          if (!this.audio.src || this.curMantraId !== AppState.curMantraId) {
+            this.setMantra(AppState.curMantraId, false);
+          }
+          const p = this.audio.play();
+          if (p && typeof p.then === 'function') {
+            p.catch(err => {
+              console.warn('音訊播放被瀏覽器限制或出錯:', err);
+              this.isPlaying = false;
+              this.updateBtnUI();
+            });
+          }
+        } catch (err) {
+          console.warn('音訊播放發生例外:', err);
+        }
+      },
+
+      pause() {
+        try {
+          this.audio.pause();
+        } catch (err) {
+          console.warn(err);
+        }
+      },
+
+      stop() {
+        try {
+          this.audio.pause();
+          this.audio.currentTime = 0;
+          this.isPlaying = false;
+          this.updateBtnUI();
+          this.updateProgress();
+        } catch (err) {
+          console.warn(err);
+        }
+      },
+
+      handleEnded() {
+        // 1. 每唱誦完一遍，持誦遍數自動 +1
+        incrementMantraCount();
+
+        // 2. 判斷播放模式
+        if (this.loopMode === 'single') {
+          this.isPlaying = false;
+          this.updateBtnUI();
+          showToast(`🙏《${document.getElementById('curMantraName')?.textContent || ''}》唱誦圓滿，持誦 +1 遍`);
+        } else if (this.loopMode === 'loop') {
+          this.loopCurCount++;
+          this.updateLoopUI();
+          this.audio.currentTime = 0;
+          this.play();
+        } else if (['3', '7', '21', '108'].includes(this.loopMode)) {
+          this.loopCurCount++;
+          const target = parseInt(this.loopMode, 10);
+          this.updateLoopUI();
+          if (this.loopCurCount < target) {
+            this.audio.currentTime = 0;
+            this.play();
+          } else {
+            this.isPlaying = false;
+            this.updateBtnUI();
+            showToast(`🎉 恭喜完成定課 ${target} 遍持誦！功德無量！`);
+          }
+        } else if (this.loopMode === 'chain') {
+          // 整套連播：自動跳到下一個咒語
+          showToast(`🙏《${document.getElementById('curMantraName')?.textContent || ''}》唱誦完成，即將接續下一咒`);
+          const curId = AppState.curMantraId;
+          if (curId < 10) {
+            setTimeout(() => {
+              openPracticeView(curId + 1);
+              ChantAudioPlayer.play();
+            }, 800);
+          } else {
+            this.isPlaying = false;
+            this.updateBtnUI();
+            showToast('🌸 讚歎！十小咒整套早課隨誦圓滿！功德無量！');
+          }
+        }
+      },
+
+      updateBtnUI() {
+        const playBtn = document.getElementById('audioPlayToggleBtn');
+        const icon = document.getElementById('audioPlayIcon');
+        const text = document.getElementById('audioPlayText');
+        if (!playBtn) return;
+
+        if (this.isPlaying) {
+          playBtn.classList.add('playing');
+          if (icon) icon.textContent = '⏸';
+          if (text) text.textContent = '暫停隨誦';
+        } else {
+          playBtn.classList.remove('playing');
+          if (icon) icon.textContent = '▶';
+          if (text) text.textContent = '隨誦聆聽';
+        }
+      },
+
+      updateLoopUI() {
+        const counterBox = document.getElementById('audioLoopCounterBox');
+        const curEl = document.getElementById('audioLoopCurCount');
+        const targetEl = document.getElementById('audioLoopTargetCount');
+        const statusMsg = document.getElementById('audioStatusMsg');
+
+        if (['3', '7', '21', '108'].includes(this.loopMode)) {
+          if (counterBox) counterBox.style.display = 'block';
+          if (curEl) curEl.textContent = this.loopCurCount;
+          if (targetEl) targetEl.textContent = this.loopMode;
+          if (statusMsg) statusMsg.textContent = `定課進度：${this.loopCurCount} / ${this.loopMode} 遍（播完自動累計遍數）`;
+        } else if (this.loopMode === 'loop') {
+          if (counterBox) counterBox.style.display = 'block';
+          if (curEl) curEl.textContent = this.loopCurCount;
+          if (targetEl) targetEl.textContent = '∞';
+          if (statusMsg) statusMsg.textContent = `無窮循環模式中（已連續持誦 ${this.loopCurCount} 遍）`;
+        } else if (this.loopMode === 'chain') {
+          if (counterBox) counterBox.style.display = 'none';
+          if (statusMsg) statusMsg.textContent = '十小咒整套早課連播模式：播完本咒將自動接續下一咒';
+        } else {
+          if (counterBox) counterBox.style.display = 'none';
+          if (statusMsg) statusMsg.textContent = '跟隨法鼓山僧團梵唄韻律持誦，每播完一遍自動為您累計「持誦遍數 +1」。';
+        }
+      },
+
+      updateTimeDisplay() {
+        const curEl = document.getElementById('audioTimeCurrent');
+        const totEl = document.getElementById('audioTimeTotal');
+        const d = this.audio.duration;
+        if (totEl && !isNaN(d) && d > 0) {
+          totEl.textContent = this.formatTime(d);
+        } else if (totEl) {
+          totEl.textContent = '--:--';
+        }
+      },
+
+      updateProgress() {
+        const d = this.audio.duration;
+        const c = this.audio.currentTime;
+        const curEl = document.getElementById('audioTimeCurrent');
+        const progressBar = document.getElementById('audioProgressBar');
+
+        if (curEl) curEl.textContent = this.formatTime(c);
+        if (progressBar && !isNaN(d) && d > 0) {
+          progressBar.value = (c / d) * 100;
+        }
+      },
+
+      formatTime(sec) {
+        if (isNaN(sec) || sec < 0) return '00:00';
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      }
+    };
+
     /* ==========================================================================
        咒語修持頁 3 種佈局渲染
        ========================================================================== */
@@ -7236,6 +8002,9 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
         const qCount = document.getElementById('curMantraCountQuick');
         if (qCount) qCount.textContent = count;
         updateMantraNavBar(mantra);
+        if (typeof ChantAudioPlayer !== 'undefined') {
+          ChantAudioPlayer.setMantra(mantraId, false);
+        }
       }
 
       // 同步頂部下拉選單
@@ -7600,6 +8369,9 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
        ========================================================================== */
     function bindEvents() {
       document.getElementById('brandHomeBtn').addEventListener('click', () => {
+        if (typeof ChantAudioPlayer !== 'undefined') {
+          ChantAudioPlayer.pause();
+        }
         document.getElementById('practiceView').style.display = 'none';
         document.getElementById('homeView').style.display = 'block';
         const quoteBox = document.getElementById('cbetaQuoteCarousel');
@@ -7982,8 +8754,12 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
           } else if (e.key === ']' || (e.altKey && e.code === 'ArrowRight')) {
             const curId = AppState.curMantraId;
             openPracticeView(curId >= 10 ? 1 : curId + 1);
-          } else if (e.code === 'ArrowRight' || e.code === 'ArrowDown' || e.code === 'Space') {
-            if (e.code === 'Space') e.preventDefault();
+          } else if (e.code === 'Space') {
+            e.preventDefault();
+            if (typeof ChantAudioPlayer !== 'undefined') {
+              ChantAudioPlayer.togglePlay();
+            }
+          } else if (e.code === 'ArrowRight' || e.code === 'ArrowDown') {
             selectSentence(AppState.curSentenceIdx + 1, true);
           } else if (e.code === 'ArrowLeft' || e.code === 'ArrowUp') {
             selectSentence(AppState.curSentenceIdx - 1, true);
@@ -8003,6 +8779,9 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
       loadCustomPronunciations();
       renderHomeLayouts();
       bindEvents();
+      if (typeof ChantAudioPlayer !== 'undefined') {
+        ChantAudioPlayer.init();
+      }
       renderStats();
     });
   </script>
