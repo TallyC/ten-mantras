@@ -1576,6 +1576,35 @@
       background: var(--accent-gold);
       cursor: pointer;
     }
+    .fanbai-speed-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      padding-left: 0.35rem;
+      border-left: 1px solid var(--border-main);
+    }
+    .fanbai-speed-icon {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+    .fanbai-speed-select {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-main);
+      color: var(--text-main);
+      border-radius: 5px;
+      padding: 0.15rem 0.3rem;
+      font-size: 0.74rem;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .fanbai-speed-select:hover, .fanbai-speed-select:focus {
+      border-color: var(--accent-gold);
+      background: var(--bg-active);
+    }
+
     .fanbai-time-tag {
       font-size: 0.72rem;
       font-family: var(--font-sans);
@@ -2389,6 +2418,16 @@
           <div class="fanbai-volume-wrap" title="音量調節">
             <span class="fanbai-vol-icon">🔊</span>
             <input type="range" class="fanbai-vol-bar" id="audioVolumeBar" min="0" max="1" step="0.05" value="1">
+          </div>
+          <!-- 隨誦播放速度調節 (0.25倍、0.5倍、0.75倍、1倍) -->
+          <div class="fanbai-speed-wrap" title="隨誦速度調節">
+            <span class="fanbai-speed-icon">⚡</span>
+            <select id="audioSpeedSelect" class="fanbai-speed-select" title="調節隨誦播放速度">
+              <option value="1">1倍</option>
+              <option value="0.75">0.75倍</option>
+              <option value="0.5">0.5倍</option>
+              <option value="0.25">0.25倍</option>
+            </select>
           </div>
           <span class="fanbai-time-tag" id="audioTimeCurrent">00:00</span>
           <span style="font-size:0.75rem; color:var(--text-muted);">/</span>
@@ -7854,6 +7893,7 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
       mode: 'chain',         // 'single' (1遍) | 'loop' (循環) | 'chain' (10咒連續跨頁) | 'custom' (自訂遍數)
       customTarget: 7,       // 自訂定課目標遍數
       loopCurCount: 0,       // 當前已唱誦遍數
+      playbackRate: 1.0,     // 隨誦速度 (0.25, 0.5, 0.75, 1)
 
       init() {
         this.audio.preload = 'metadata';
@@ -7925,6 +7965,22 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
             const v = parseFloat(e.target.value);
             this.audio.volume = v;
             SafeStorage.setItem('zen_audio_vol', v.toString());
+          });
+        }
+
+        // 讀取速度設定並綁定事件
+        const savedSpeed = SafeStorage.getItem('zen_audio_speed');
+        if (savedSpeed) {
+          const sp = parseFloat(savedSpeed);
+          if ([0.25, 0.5, 0.75, 1].includes(sp)) {
+            this.playbackRate = sp;
+          }
+        }
+        const speedSelect = document.getElementById('audioSpeedSelect');
+        if (speedSelect) {
+          speedSelect.value = this.playbackRate.toString();
+          speedSelect.addEventListener('change', (e) => {
+            this.setSpeed(parseFloat(e.target.value));
           });
         }
 
@@ -8083,6 +8139,9 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
         this.loopCurCount = 0;
         this.audio.src = `audio/${mantraId}.mp3`;
         this.audio.load();
+        try {
+          this.audio.playbackRate = this.playbackRate;
+        } catch (e) {}
 
         this.updatePlayBtnUI();
         this.updateTimeDisplay();
@@ -8090,6 +8149,21 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
         if (this.enabled && (autoPlay || wasPlaying)) {
           this.play();
         }
+      },
+
+      setSpeed(rate) {
+        this.playbackRate = rate;
+        try {
+          if (this.audio) {
+            this.audio.playbackRate = rate;
+          }
+        } catch (e) {
+          console.warn('設置播放速度出錯:', e);
+        }
+        SafeStorage.setItem('zen_audio_speed', rate.toString());
+        const speedSelect = document.getElementById('audioSpeedSelect');
+        if (speedSelect) speedSelect.value = rate.toString();
+        showToast(`⚡ 隨誦速度已設定為 ${rate} 倍速`);
       },
 
       togglePlay() {
@@ -8109,6 +8183,9 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
           if (!this.audio.src || this.curMantraId !== AppState.curMantraId) {
             this.setMantra(AppState.curMantraId, false);
           }
+          try {
+            this.audio.playbackRate = this.playbackRate;
+          } catch (e) {}
           const p = this.audio.play();
           if (p && typeof p.then === 'function') {
             p.catch(err => {
