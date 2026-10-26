@@ -23,3 +23,6 @@ yarn-error.log*
 .temp/
 tmp/
 scratch/
+*.png
+test_*.html
+

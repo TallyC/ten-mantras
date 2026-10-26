@@ -16,56 +16,59 @@
        1. 護眼禪意美學配色系統 (嚴禁高刺激性亮白背景與螢光色)
        ========================================================================== */
     :root {
-      /* 【暖沙禪石】日間護眼暖灰調 (Stone/Warm Sand) */
-      --bg-base: #f5f2eb;
-      --bg-card: #ffffff;
-      --bg-card-subtle: #eae6dc;
-      --bg-active: #e4dfd3;
-      --border-main: rgba(90, 78, 65, 0.16);
-      --border-focus: rgba(155, 120, 62, 0.5);
+      /* 【暖沙禪石】對齊金剛經誦讀助手溫潤宣紙風 (拒絕純白 #ffffff，極致護眼低對比) */
+      --bg-base: #ebe6dc;
+      --bg-card: rgba(238, 233, 224, 0.94);
+      --bg-card-subtle: #ded8cb;
+      --bg-active: #d6cfbf;
+      --border-main: rgba(160, 120, 50, 0.22);
+      --border-focus: rgba(160, 120, 50, 0.55);
       
-      --text-main: #2b2723;
-      --text-sub: #665f57;
-      --text-muted: #8f877d;
+      --text-main: #2e2820;
+      --text-sub: #544d42;
+      --text-muted: #786f63;
       
-      --accent-gold: #9b783e;
-      --accent-gold-light: #f7ecd7;
-      --accent-green: #3d6854;
-      --accent-green-light: #e6f0eb;
-      --accent-red: #9e473b;
+      --accent-gold: #9a6d1a;
+      --accent-gold-light: rgba(154, 109, 26, 0.12);
+      --accent-green: #2d6a4f;
+      --accent-green-light: #d8f3dc;
+      --accent-red: #b83a22;
       --accent-red-light: #fbeee8;
       
       --zh-color: #b83a22;
-      --py-color: #047857;
+      --py-color: #1b7340;
       --label-layout-color: #165c7d;
       --label-practice-color: #b43818;
       
-      --shadow-sm: 0 2px 8px rgba(70, 58, 45, 0.06);
-      --shadow-md: 0 8px 20px rgba(70, 58, 45, 0.09);
-      --font-serif: 'Noto Serif TC', 'BiauKai', 'DFKai-SB', 'Songti SC', serif;
+      --shadow-sm: 0 2px 8px rgba(70, 58, 45, 0.08);
+      --shadow-md: 0 8px 20px rgba(70, 58, 45, 0.12);
+      --font-serif: var(--sutra-font-family, 'Kaiti TC', '楷體-繁', 'DFKai-SB', '標楷體', 'BiauKai', 'STKaiti', serif);
       --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --sutra-font-family: 'Kaiti TC', '楷體-繁', 'DFKai-SB', '標楷體', 'BiauKai', 'STKaiti', serif;
+      --sutra-line-height: 1.7;
+      --sutra-font-size: 2.2rem;
       --transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     [data-theme="dark"] {
-      /* 【曜石古茶】夜修專注暗調 (Obsidian & Tea Ash) */
-      --bg-base: #121214;
-      --bg-card: #1b1b1f;
-      --bg-card-subtle: #242429;
-      --bg-active: #2f2f36;
-      --border-main: rgba(255, 255, 255, 0.08);
-      --border-focus: rgba(158, 179, 164, 0.4);
+      /* 【曜石古茶】對齊金剛經誦讀助手沉穩護眼暗調 (古茶灰/暗曜石，告別死黑，柔和不刺眼) */
+      --bg-base: #1a1c23;
+      --bg-card: rgba(30, 34, 42, 0.88);
+      --bg-card-subtle: #252a35;
+      --bg-active: #323846;
+      --border-main: rgba(212, 175, 55, 0.22);
+      --border-focus: rgba(212, 175, 55, 0.6);
       
-      --text-main: #e2e2e5;
-      --text-sub: #9e9ea6;
-      --text-muted: #6b6b73;
+      --text-main: #dfdfe6;
+      --text-sub: #b3b8c4;
+      --text-muted: #9ba1b0;
       
-      --accent-gold: #c8a87b;
-      --accent-gold-light: rgba(200, 168, 123, 0.15);
-      --accent-green: #9eb3a4;
-      --accent-green-light: rgba(158, 179, 164, 0.15);
-      --accent-red: #d17567;
-      --accent-red-light: rgba(209, 117, 103, 0.15);
+      --accent-gold: #d4af37;
+      --accent-gold-light: rgba(212, 175, 55, 0.16);
+      --accent-green: #2ec4b6;
+      --accent-green-light: rgba(46, 196, 182, 0.15);
+      --accent-red: #e76f51;
+      --accent-red-light: rgba(231, 111, 81, 0.15);
       
       --zh-color: #f87171;
       --py-color: #34d399;
@@ -753,6 +756,144 @@
     .practice-tab-btn.active .tab-sub {
       color: var(--accent-gold);
       opacity: 0.85;
+    }
+
+    /* ==========================================================================
+       經文間距鎖定系統 (注音/拼音隱藏後，其餘間距保持 100% 相同，絕不跳動)
+       ========================================================================== */
+    .hide-zh .ruby-bopomofo,
+    .ruby-bopomofo.ruby-hidden {
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+    .hide-py .ruby-pinyin,
+    .ruby-pinyin.ruby-hidden {
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* 經文字型與行距全面套用閱讀設定 */
+    .mantra-sentence-block,
+    .stage-words-container,
+    .mantra-scroll-board {
+      font-family: var(--sutra-font-family, 'Kaiti TC', '楷體-繁', 'DFKai-SB', '標楷體', 'BiauKai', 'STKaiti', serif);
+      line-height: var(--sutra-line-height, 1.7) !important;
+    }
+    .ruby-char {
+      font-family: var(--sutra-font-family, 'Kaiti TC', '楷體-繁', 'DFKai-SB', '標楷體', 'BiauKai', 'STKaiti', serif);
+    }
+
+    /* 閱讀設定彈窗樣式 (對齊金剛經誦讀助手) */
+    .reader-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      animation: fadeIn 0.25s ease;
+    }
+    .reader-modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-focus);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .reader-modal-header {
+      padding: 1.1rem 1.4rem;
+      border-bottom: 1px solid var(--border-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .reader-modal-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .reader-modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+    .reader-modal-close:hover {
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+    }
+    .reader-modal-body {
+      padding: 1.25rem 1.4rem;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .reader-setting-section {
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.1rem;
+      border-bottom: 1px solid var(--border-main);
+    }
+    .reader-setting-label {
+      font-size: 0.88rem;
+      color: var(--accent-gold);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.04em;
+    }
+    .reader-pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .reader-pill-btn {
+      flex: 1 1 calc(33.333% - 0.5rem);
+      min-width: 90px;
+      padding: 0.55rem 0.6rem;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: 8px;
+      color: var(--text-sub);
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition);
+    }
+    .reader-pill-btn:hover {
+      border-color: var(--accent-gold);
+      color: var(--text-main);
+    }
+    .reader-pill-btn.active {
+      background: var(--accent-gold-light);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(154, 109, 26, 0.15);
     }
 
     /* 讀音校正自訂面板 */
@@ -2257,7 +2398,7 @@
         <div class="zen-emblem">十</div>
         <div class="brand-title">
           <span class="brand-name">十小咒</span><span class="brand-sub">互動誦持</span>
-          <span class="badge-v">v2.2</span>
+          <span class="badge-v">v2.3</span>
         </div>
       </div>
 
@@ -2285,6 +2426,10 @@
 
         <!-- 主題切換 (暖沙禪石 / 曜石古茶) -->
         <!-- 梵唄隨誦設定入口 -->
+        <button class="btn-icon" id="openReaderSettingsBtn" title="經文閱讀設定（字體、字級、行距與滑動手勢）">
+          <span style="font-size: 1rem;">📖</span>
+          <span class="btn-text">閱讀設定</span>
+        </button>
         <button class="btn-icon btn-fanbai" id="fanbaiSettingBtn" title="法鼓山早課原音隨誦設定">
           <svg class="fanbai-icon-svg" viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="display:inline-block; vertical-align:middle; margin-right:3px;">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25-2 7-2 7v2h18v-2s-2-1.75-2-7c0-3.87-3.13-7-7-7zm0 20c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm0-15a2 2 0 0 0-2 2c0 .74.4 1.39 1 1.73V13h2v-2.27c.6-.34 1-.99 1-1.73a2 2 0 0 0-2-2z"/>
@@ -8927,9 +9072,9 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
       }
 
       unit.innerHTML = `
-        <div class="ruby-bopomofo" style="display:${AppState.showZh ? 'block' : 'none'}">${activeWord.zh}</div>
+        <div class="ruby-bopomofo ${AppState.showZh ? '' : 'ruby-hidden'}" style="visibility:${AppState.showZh ? 'visible' : 'hidden'}">${activeWord.zh}</div>
         <div class="ruby-char">${activeWord.char}</div>
-        <div class="ruby-pinyin" style="display:${AppState.showPy ? 'block' : 'none'}">${activeWord.py}</div>
+        <div class="ruby-pinyin ${AppState.showPy ? '' : 'ruby-hidden'}" style="visibility:${AppState.showPy ? 'visible' : 'hidden'}">${activeWord.py}</div>
       `;
       return unit;
     }
@@ -8953,6 +9098,195 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
       document.querySelectorAll('.speaking-active').forEach(el => el.classList.remove('speaking-active'));
       const targets = document.querySelectorAll(`[data-sentence-idx="${sIdx}"]`);
       targets.forEach(el => el.classList.add('speaking-active'));
+    }
+
+    /* ==========================================================================
+       金剛經誦讀助手閱讀設定邏輯 (字型、字級、行距) 與左右滑動手勢
+       ========================================================================== */
+    const FONT_MAP = {
+      'kaiti': "'Kaiti TC', '楷體-繁', 'DFKai-SB', '標楷體', 'BiauKai', 'STKaiti', 'KaiTi', 'TW-Kai', serif",
+      'serif': "'Noto Serif TC', 'Songti TC', '宋體-繁', 'PMingLiU', '新細明體', 'MingLiU', 'STSong', serif",
+      'sans': "'Noto Sans TC', 'PingFang TC', '蘋方-繁', 'Microsoft JhengHei', '微軟正黑體', 'Heiti TC', sans-serif"
+    };
+
+    let currentSutraFont = SafeStorage.getItem('zen_sutra_font') || 'kaiti';
+    let currentSutraLineHeight = SafeStorage.getItem('zen_sutra_line_height') || '1.7';
+
+    function applyReaderSettings() {
+      const family = FONT_MAP[currentSutraFont] || FONT_MAP.kaiti;
+      document.documentElement.style.setProperty('--sutra-font-family', family);
+      document.documentElement.style.setProperty('--sutra-line-height', currentSutraLineHeight);
+
+      // 更新按鈕 active 狀態
+      document.querySelectorAll('[data-sutra-font]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-sutra-font') === currentSutraFont);
+      });
+      document.querySelectorAll('[data-sutra-size]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-sutra-size') === AppState.fontSize);
+      });
+      document.querySelectorAll('[data-sutra-lineheight]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-sutra-lineheight') === currentSutraLineHeight);
+      });
+    }
+
+    function initReaderSettings() {
+      applyReaderSettings();
+
+      const openBtn = document.getElementById('openReaderSettingsBtn');
+      const closeBtn = document.getElementById('closeReaderSettingsBtn');
+      const doneBtn = document.getElementById('readerSettingsDoneBtn');
+      const modal = document.getElementById('readerSettingsModal');
+
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', () => {
+          applyReaderSettings();
+          modal.style.display = 'flex';
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      }
+      if (doneBtn && modal) {
+        doneBtn.addEventListener('click', () => {
+          modal.style.display = 'none';
+          showToast('✨ 閱讀設定已套用');
+        });
+      }
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) modal.style.display = 'none';
+        });
+      }
+
+      // 字型選擇切換
+      document.querySelectorAll('[data-sutra-font]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const font = e.currentTarget.getAttribute('data-sutra-font');
+          if (font && FONT_MAP[font]) {
+            currentSutraFont = font;
+            SafeStorage.setItem('zen_sutra_font', font);
+            applyReaderSettings();
+            showToast(`✒️ 已切換為：${e.currentTarget.textContent.trim()}`);
+          }
+        });
+      });
+
+      // 字級大小切換
+      document.querySelectorAll('[data-sutra-size]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const size = e.currentTarget.getAttribute('data-sutra-size');
+          if (size) {
+            applyFontSize(size);
+            applyReaderSettings();
+          }
+        });
+      });
+
+      // 行距切換
+      document.querySelectorAll('[data-sutra-lineheight]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const lh = e.currentTarget.getAttribute('data-sutra-lineheight');
+          if (lh) {
+            currentSutraLineHeight = lh;
+            SafeStorage.setItem('zen_sutra_line_height', lh);
+            applyReaderSettings();
+            showToast(`📏 行距已調整為：${e.currentTarget.textContent.trim()}`);
+          }
+        });
+      });
+    }
+
+    /* 左右滑動手勢 (Swipe Gesture) */
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    function initSwipeGestures() {
+      document.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 1) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      document.addEventListener('touchend', (e) => {
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
+        touchEndX = e.changedTouches[0].clientX;
+        touchEndY = e.changedTouches[0].clientY;
+        handleSwipeGesture();
+      }, { passive: true });
+    }
+
+    function handleSwipeGesture() {
+      // 避免在彈窗打開或正在打字核對時誤觸滑動
+      const readerModal = document.getElementById('readerSettingsModal');
+      const fanbaiModal = document.getElementById('fanbaiModal');
+      const customPanel = document.getElementById('customPronouncePanel');
+      if (readerModal && readerModal.style.display === 'flex') return;
+      if (fanbaiModal && fanbaiModal.style.display === 'flex') return;
+      if (customPanel && customPanel.style.display === 'block') return;
+      if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) return;
+
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+
+      // 水平位移超過 40px，且水平位移明顯大於垂直位移（不干擾垂直滑動滾動）
+      if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY) * 1.2) {
+        if (AppState.curView === 'practice') {
+          if (AppState.practiceLayout === 'step') {
+            // 分句卡片模式
+            const curMantra = MANTRAS_DATA.find(m => m.id === AppState.curMantraId);
+            if (diffX < 0) {
+              // 向左滑：下一句
+              if (AppState.curSentenceIdx < curMantra.sentences.length - 1) {
+                AppState.curSentenceIdx++;
+                renderStepSentence(AppState.curSentenceIdx);
+                showToast(`👉 下一句 (${AppState.curSentenceIdx + 1}/${curMantra.sentences.length})`);
+              } else {
+                switchMantraByDelta(1);
+              }
+            } else {
+              // 向右滑：上一句
+              if (AppState.curSentenceIdx > 0) {
+                AppState.curSentenceIdx--;
+                renderStepSentence(AppState.curSentenceIdx);
+                showToast(`👈 上一句 (${AppState.curSentenceIdx + 1}/${curMantra.sentences.length})`);
+              } else {
+                switchMantraByDelta(-1);
+              }
+            }
+          } else {
+            // 全文滾動模式或義理雙欄模式：向左滑切換下一咒，向右滑切換上一咒
+            if (diffX < 0) {
+              switchMantraByDelta(1);
+            } else {
+              switchMantraByDelta(-1);
+            }
+          }
+        } else if (AppState.curView === 'home') {
+          // 首頁輪播或列表：向左滑下一咒，向右滑上一咒
+          if (diffX < 0) {
+            carouselIndex = (carouselIndex + 1) % MANTRAS_DATA.length;
+            updateCarouselItem();
+            showToast(`👉 下一咒：${MANTRAS_DATA[carouselIndex].name}`);
+          } else {
+            carouselIndex = (carouselIndex - 1 + MANTRAS_DATA.length) % MANTRAS_DATA.length;
+            updateCarouselItem();
+            showToast(`👈 上一咒：${MANTRAS_DATA[carouselIndex].name}`);
+          }
+        }
+      }
+    }
+
+    function switchMantraByDelta(delta) {
+      let nextId = AppState.curMantraId + delta;
+      if (nextId < 1) nextId = 10;
+      if (nextId > 10) nextId = 1;
+      openPracticeView(nextId);
+      const m = MANTRAS_DATA.find(item => item.id === nextId);
+      showToast(`${delta > 0 ? '👉' : '👈'} 切換咒語：${m ? m.name : ''}`);
     }
 
     function incrementMantraCount() {
@@ -9137,18 +9471,24 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
       document.getElementById('toggleZh').addEventListener('change', (e) => {
         AppState.showZh = e.target.checked;
         updateToggleStyle();
+        document.body.classList.toggle('hide-zh', !AppState.showZh);
         document.querySelectorAll('.ruby-bopomofo').forEach(el => {
-          el.style.display = AppState.showZh ? 'block' : 'none';
+          el.style.visibility = AppState.showZh ? 'visible' : 'hidden';
+          el.classList.toggle('ruby-hidden', !AppState.showZh);
         });
       });
       document.getElementById('togglePy').addEventListener('change', (e) => {
         AppState.showPy = e.target.checked;
         updateToggleStyle();
+        document.body.classList.toggle('hide-py', !AppState.showPy);
         document.querySelectorAll('.ruby-pinyin').forEach(el => {
-          el.style.display = AppState.showPy ? 'block' : 'none';
+          el.style.visibility = AppState.showPy ? 'visible' : 'hidden';
+          el.classList.toggle('ruby-hidden', !AppState.showPy);
         });
       });
       updateToggleStyle();
+        
+        
 
       // 持誦計數事件
       document.getElementById('incCountBtn').addEventListener('click', incrementMantraCount);
@@ -9298,6 +9638,8 @@ function autoConvertZhuyinToPinyin(zhuyinStr) {
             dot.addEventListener('click', () => {
               AppState.quoteIdx = idx;
               renderQuoteCarousel();
+    initReaderSettings();
+    initSwipeGestures();
               resetQuoteTimer();
             });
             dotsEl.appendChild(dot);
