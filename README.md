@@ -1,7 +1,8 @@
 # 禪意數位經典隨誦系統 — 系統維護手冊與經典移轉指南
 
-> **當前版本**：v2.2  
-> **線上發布環境**：[https://ddm-ten-mantras.surge.sh](https://ddm-ten-mantras.surge.sh)  
+> **當前版本**：v2.3  
+> **GitHub Pages 正式站點**：[https://tallyc.github.io/ten-mantras/](https://tallyc.github.io/ten-mantras/)  
+> **Surge 鏡像站點**：[https://ddm-ten-mantras.surge.sh](https://ddm-ten-mantras.surge.sh)  
 > **架構形態**：單檔純原生架構（Single-File HTML/CSS/Vanilla JS）+ 靜態音訊資源，無後端、無打包工具依賴、可雙擊離線運行。
 
 ---
